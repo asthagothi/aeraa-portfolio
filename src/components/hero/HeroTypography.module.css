@@ -1,0 +1,19 @@
+.headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-weight: inherit;
+}
+
+.eyebrow,
+.title {
+  display: block;
+}
+
+.eyebrow {
+  /* Optical gap between the two lines, measured from the reference. */
+  margin-bottom: 0.14em;
+  /* Tracking adds trailing space after the last letter; offset it to stay centred. */
+  margin-right: calc(var(--tracking-eyebrow) * -1);
+}

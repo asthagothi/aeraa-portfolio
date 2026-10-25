@@ -1,0 +1,9 @@
+/* Brand typeface supplied by Astha (Google Drive › Fonts), self-hosted from public/fonts/.
+ * Vogue — the "Aeraa" logo and name only. All-caps Didone display face. */
+@font-face {
+  font-family: "Vogue";
+  src: url("/fonts/vogue/Vogue-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

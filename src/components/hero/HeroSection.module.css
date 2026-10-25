@@ -1,0 +1,190 @@
+/*
+ * Hero composition.
+ * The stage keeps the reference's 1397×1008 proportions and is a size container,
+ * so every position below is a percentage of the stage and every size scales with it (cqi).
+ *
+ * Alignment grid (desktop):
+ *   - Centre axis (50%): headline and the figure. The figure's visual centre sits at 49% of
+ *     the photo's width (measured from the cut-out), so the photo is offset to put the person,
+ *     not the photo frame, on the axis.
+ *   - Left column  (outer edge --edge): intro card and contact widget share a left edge.
+ *   - Right column (outer edge 100% - --edge): skills tab, skills list and browser bar share a left edge.
+ *   - Intro card and skills panel share a top line (--row-top).
+ */
+
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  overflow: clip;
+  /* No grain here: the photo's feathered edges must match this wall exactly. */
+  background: linear-gradient(
+    to bottom,
+    var(--color-canvas-top) 0%,
+    var(--color-canvas) 62%,
+    var(--color-canvas-bottom) 100%
+  );
+}
+
+.stage {
+  /* Figure size and placement. Head top (17.5% down the photo) lands ~4% of the stage
+     above the DESIGNER baseline so the hair overlaps the lettering. */
+  --model-w: 40%;
+  --model-axis: 0.49;
+  --model-top: 10.8%;
+  /* Card grid */
+  --edge: 12.5%;
+  --row-top: 38%;
+  /* Intro card and contact widget share both edges. */
+  --left-w: 27%;
+  --contact-w: 27%;
+  --right-w: 18%;
+
+  position: relative;
+  /* Fits the viewport height, but never narrower than 1000px: below that the cards' readable
+     minimum text sizes no longer fit the composition, so a short window scrolls a little instead. */
+  width: min(100%, max(1000px, calc(100svh * 1397 / 1008)));
+  aspect-ratio: 1397 / 1008;
+  container-type: inline-size;
+}
+
+.stage > * {
+  position: absolute;
+}
+
+/* Photo + cut-out share this box, so the two layers stay pixel-aligned. */
+.portrait {
+  left: calc(50% - var(--model-w) * var(--model-axis));
+  top: var(--model-top);
+  width: var(--model-w);
+}
+
+.headline {
+  left: 0;
+  right: 0;
+  top: 13.7%;
+  z-index: var(--z-headline);
+}
+
+/* Left column */
+/* Desktop: the intro card and the contact card stack in one column, so the contact card always sits
+ * a fixed gap below the card, whatever the card's height. */
+.leftCol {
+  left: var(--edge);
+  top: var(--row-top);
+  width: var(--left-w);
+  z-index: var(--z-widget);
+  display: flex;
+  flex-direction: column;
+  gap: max(1rem, 1.5cqi);
+}
+.intro,
+.contact { position: relative; }
+
+/* Right column */
+.skills {
+  left: calc(100% - var(--edge) - var(--right-w));
+  top: var(--row-top);
+  width: var(--right-w);
+  z-index: var(--z-card);
+}
+
+.browser {
+  left: calc(100% - var(--edge) - var(--right-w));
+  top: 76%;
+  width: var(--right-w);
+  z-index: var(--z-card-raised);
+}
+
+/* ==========================================================================
+ * Compact desktop / landscape tablet (stage narrower than ~1180px).
+ * Card text has readable minimum sizes, so cards grow relative to the stage:
+ * widen the columns and pull them outward. Queried on the stage itself.
+ * ========================================================================== */
+@container (max-width: 1180px) {
+  .stage > * { --edge: 7%; --left-w: 30%; --contact-w: 30%; --right-w: 22%; --row-top: 36%; }
+  .browser { top: 78%; }
+}
+
+/* ==========================================================================
+ * Tablet, portrait (768–1099px wide, taller than wide).
+ * Also used for any window 768–1023px wide (e.g. a narrow or near-square desktop window),
+ * where the desktop composition would be too narrow for its cards.
+ * Same layered composition on a 3:4 stage with a larger figure. Cards sit over
+ * the props (computers, camera) and below the figure, clear of the face and torso.
+ * ========================================================================== */
+@media (min-width: 768px) and (max-width: 1023px), (min-width: 768px) and (max-width: 1099px) and (orientation: portrait) {
+  .stage {
+    --model-w: 68%;
+    --model-top: 3%;
+    width: min(100%, max(768px, calc(100svh * 3 / 4)));
+    aspect-ratio: 3 / 4;
+    /* Hero type scaled to this stage (replaces the desktop cqi ratios). */
+    --text-display: 15cqi;
+    --text-eyebrow: 5.8cqi;
+  }
+
+  .stage > * { --edge: 3%; --row-top: 44%; --left-w: 31%; --right-w: 26%; --contact-w: 50%; }
+  .headline { top: 6%; }
+  /* The left column unwraps here: card and contact card keep their own tablet positions. */
+  .leftCol { display: contents; }
+  .intro { position: absolute; left: var(--edge); top: var(--row-top); width: var(--left-w); z-index: var(--z-card); }
+  .contact { position: absolute; left: var(--edge); top: 84%; width: var(--contact-w); z-index: var(--z-widget); }
+  /* Vertically centred on the contact widget so the bottom row reads as one line. */
+  .browser  { top: calc(84% + (max(64px, 6.15cqi) - max(28px, 2.15cqi)) / 2); }
+}
+
+/* ==========================================================================
+ * Mobile (under 768px), and short landscape phones.
+ * The composition becomes a vertical flow: headline, a full-bleed portrait
+ * overlapping the headline, then the cards stacked on one shared column.
+ * Nothing is absolutely positioned, so text can never be clipped or hidden.
+ * ========================================================================== */
+@media (max-width: 767px), (max-height: 520px) and (orientation: landscape) {
+  .hero {
+    place-items: start center;
+    min-height: 0;
+    padding-block: var(--space-10) var(--space-16);
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: stretch;
+    width: 100%;
+    max-width: 30rem;
+    aspect-ratio: auto;
+    padding-inline: var(--gutter);
+    --text-display: 19cqi;
+    --text-eyebrow: 7.4cqi;
+  }
+
+  .stage > * {
+    position: relative;
+    grid-column: 1;
+    inset: auto;
+    width: auto;
+  }
+
+  .headline { grid-row: 1; }
+
+  /* Full-bleed: the figure spans the gutters too (its edges are feathered into the canvas).
+     Pulled up so the head overlaps the title. Both layers share one cell, so they stay aligned. */
+  .portrait {
+    grid-row: 2;
+    width: calc(100% + 2 * var(--gutter));
+    max-width: none; /* override the global img max-width so the bleed isn't capped */
+    margin-inline: calc(-1 * var(--gutter));
+    margin-top: -37cqi;
+  }
+
+  /* All cards share the column edges. */
+  .leftCol { display: contents; }
+  .intro,
+  .contact { position: relative; grid-column: 1; inset: auto; width: auto; }
+  .intro   { grid-row: 3; margin-top: -10cqi; }
+  .contact { grid-row: 4; margin-top: var(--space-4); }
+  .skills  { grid-row: 5; margin-top: var(--space-6); }
+  .browser { grid-row: 6; margin-top: var(--space-6); }
+}

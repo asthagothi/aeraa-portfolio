@@ -1,0 +1,430 @@
+/* Work page, after the reference site (see WorkPage.tsx). Cream page, ink type, condensed titles,
+ * dark panels. Four columns run down the whole page; every section header puts its "[ 0n ] Label"
+ * in the first and its title from the second. */
+.page {
+  --ink: var(--studio-ink);
+  --muted: var(--studio-ink-muted);
+  --dark: #2e201f;
+  --on-dark: #feefb8;
+  --mat: #fdf8e4;
+  --line: rgb(46 32 31 / 0.14);
+  --guide: rgb(46 32 31 / 0.1);
+  --radius: 12px;
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+  --inset: clamp(0.75rem, 1.2vw, 1.1rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  padding: calc(var(--nav-h, 64px) + 1.5rem) var(--gutter) 4rem;
+  background: var(--studio-cream);
+  color: var(--ink);
+}
+
+/* The column lines: the two edges on phones, four columns wider; behind everything. */
+.columns {
+  position: absolute;
+  inset: 0 var(--gutter);
+  z-index: -1;
+  border-inline: 1px solid var(--guide);
+  pointer-events: none;
+}
+
+.kicker { font-family: var(--font-ui); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.dot { flex: none; width: 6px; height: 6px; background: currentColor; opacity: 0.55; transition: background-color 0.25s ease, opacity 0.25s ease; }
+
+.darkButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0 1.15rem;
+  border-radius: 8px;
+  background: var(--dark);
+  color: var(--on-dark);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background-color 0.25s ease;
+}
+.darkButton:hover { background: #432f2e; }
+.darkButton:hover .dot { background: #e4572e; opacity: 1; }
+
+/* ---------- Hero ---------- */
+.hero { display: grid; padding-bottom: 2rem; }
+.heroMeta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.heroMeta li { padding: 0 var(--inset); }
+.heroTitle,
+.heroShadow {
+  padding: 0 var(--inset);
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(7rem, 30vw, 24rem);
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.heroTitle { margin-top: 2.5rem; }
+/* The second line, after the reference's darker "STERN": the brand name in a quiet tone. */
+.heroShadow { color: rgb(46 32 31 / 0.12); }
+
+.heroIndex {
+  display: grid;
+  gap: 0.6rem;
+  margin: 2rem 0 0;
+  padding: 0 var(--inset);
+}
+.heroIndexLabel { font-size: 0.75rem; letter-spacing: 0.04em; }
+
+/* ---------- Section tickets (after the reference's concept cards) ----------
+ * A light card with fine scan lines: the name on the face; a perforated stub below, its seam marked
+ * by a dashed line and two notches cut in the page colour. */
+.tickets { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.ticket {
+  --paper: #fffdf8;
+  --notch: 14px;
+  --stub-h: 2.6rem;
+  position: relative;
+  display: grid;
+  color: var(--ink);
+  text-decoration: none;
+  filter: drop-shadow(0 1px 0 rgb(46 32 31 / 0.14)) drop-shadow(0 10px 18px rgb(46 32 31 / 0.08));
+}
+.ticket:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 14px; }
+.ticketFace,
+.ticketStub {
+  background:
+    repeating-linear-gradient(to bottom, rgb(46 32 31 / 0.035) 0 1px, transparent 1px 3px),
+    var(--paper);
+}
+.ticketFace {
+  display: grid;
+  place-items: center;
+  min-height: 92px;
+  padding: 1.1rem 1rem 0.9rem;
+  border-radius: 14px 14px 0 0;
+  text-align: center;
+}
+.ticketName {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(1.35rem, 1.9vw, 1.85rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.ticketStub {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  height: var(--stub-h);
+  padding: 0 0.85rem;
+  border-radius: 0 0 14px 14px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform-origin: 0 0;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* The perforation: a dashed seam inset from the edges, and the notches. */
+.ticketStub::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  border-top: 1px dashed rgb(46 32 31 / 0.4);
+}
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - var(--stub-h) - var(--notch) / 2);
+  width: var(--notch);
+  height: var(--notch);
+  border-radius: 50%;
+  background: var(--studio-cream);
+}
+/* Each notch shows only its half inside the card, with a fine edge, so it reads as a cut. */
+.ticket::before { left: calc(var(--notch) / -2); clip-path: inset(0 0 0 50%); box-shadow: inset 0 0 0 1px rgb(46 32 31 / 0.18); }
+.ticket::after { right: calc(var(--notch) / -2); clip-path: inset(0 50% 0 0); box-shadow: inset 0 0 0 1px rgb(46 32 31 / 0.18); }
+.ticketRoll { display: grid; height: 1.3em; overflow: hidden; line-height: 1.3; }
+.ticketRoll > span { display: flex; align-items: center; gap: 0.5rem; transition: transform 0.45s var(--ease-out); }
+.ticketNum { flex: none; color: var(--muted); }
+.ticket:hover .ticketStub { transform: rotate(3deg) translateY(2px); }
+.ticket:hover .ticketRoll > span { transform: translateY(-100%); }
+.ticket:hover .dot { background: #e4572e; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .ticketStub,
+  .ticketRoll > span { transition: none; }
+  .ticket:hover .ticketStub { transform: none; }
+}
+
+/* The strip under the hero: three small thumbnails, the role; the roles line on the right. */
+.strip { display: grid; gap: 1rem; padding: 1.5rem 0 0; border-top: 1px solid var(--line); }
+.stripLeft { display: flex; align-items: center; gap: 0.9rem; padding: 0 var(--inset); }
+.stripThumbs { display: flex; }
+.stripThumbs img { width: 34px; height: 34px; object-fit: cover; border-radius: 4px; box-shadow: 0 0 0 2px var(--studio-cream); }
+.stripThumbs img + img { margin-left: -4px; }
+.stripRole { display: block; font-size: 0.9375rem; line-height: 1.25; }
+.stripOrg { display: block; margin-top: 0.15rem; font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.stripText { padding: 0 var(--inset); font-size: clamp(1.15rem, 1.8vw, 1.5rem); line-height: 1.35; }
+
+/* ---------- 01 Approach ---------- */
+.approach { display: grid; justify-items: start; gap: 1.75rem; padding: clamp(4rem, 9vw, 8rem) 0 0; }
+.approach > * { padding: 0 var(--inset); }
+.approach > .darkButton { margin-left: var(--inset); padding: 0 1.15rem; }
+.sectionLabel { font-size: 0.75rem; letter-spacing: 0.04em; }
+.approachLead { max-width: 24ch; font-size: clamp(1.9rem, 4.2vw, 3.6rem); font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; }
+.word { transition: none; }
+.approachText { display: grid; gap: 1rem; max-width: 46ch; font-size: 1.0625rem; line-height: 1.6; color: var(--muted); }
+
+/* ---------- Sections ---------- */
+.section { padding: clamp(4rem, 9vw, 8rem) 0 0; scroll-margin-top: calc(var(--nav-h, 64px) + 1rem); }
+.sectionHead { display: grid; justify-items: start; gap: 1.1rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+.sectionHead > * { padding: 0 var(--inset); }
+.sectionTitle {
+  max-width: 14ch;
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(3.25rem, 8vw, 7.5rem);
+  line-height: 0.86;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.sectionText { display: grid; gap: 0.9rem; max-width: 52ch; font-size: clamp(1rem, 1.3vw, 1.125rem); line-height: 1.6; color: var(--muted); }
+.sectionMeta { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.platformLinks { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; padding: 1.25rem var(--inset) 0; font-size: 0.875rem; }
+.platformLinks a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+
+/* ---------- 05 Experience: the dark notes panel (with its own column lines) ---------- */
+.notes {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 2rem;
+  margin-top: clamp(4rem, 9vw, 8rem);
+  padding: clamp(2rem, 5vw, 4.5rem) 0;
+  border-radius: 14px;
+  background: var(--dark);
+  color: var(--on-dark);
+}
+.notesColumns { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.notesSide,
+.notesMain { display: grid; align-content: start; gap: 1.25rem; padding: 0 calc(var(--inset) + 0.5rem); }
+.notesOrg { font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: #c4dae8; }
+.notesTitle { max-width: 16ch; font-size: clamp(2rem, 4.4vw, 3.75rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.01em; }
+.notesList { display: grid; margin: 0.5rem 0 0; padding: 0; list-style: none; }
+.notesList li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 1rem; padding: 1rem 0; border-top: 1px solid rgb(254 239 184 / 0.14); font-size: 1rem; line-height: 1.55; color: rgb(254 239 184 / 0.88); }
+.notesNum { font-size: 0.75rem; letter-spacing: 0.06em; color: #e4572e; }
+
+/* ---------- 07 Index: ticket rows ---------- */
+.rows { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 8px 14px 8px 8px;
+  border-radius: 10px;
+  background: var(--dark);
+  color: var(--on-dark);
+  text-align: left;
+  cursor: pointer;
+}
+.row:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* The ticket notch and dashed seam between the thumbnail and the text. */
+.row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 104px;
+  border-left: 1px dashed rgb(254 239 184 / 0.25);
+}
+.row::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 99px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--studio-cream);
+}
+.rowThumb { display: block; height: 62px; overflow: hidden; border-radius: 6px; }
+.rowThumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease-out); }
+.rowThumb img[data-fit="contain"] { object-fit: contain; padding: 4px; }
+.row:hover .rowThumb img { transform: scale(1.06); }
+.row:hover .dot { background: #e4572e; opacity: 1; }
+.rowBody { display: grid; gap: 0.3rem; min-width: 0; padding-left: 0.75rem; }
+.rowKind { font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.2; }
+.rowMeta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.6rem; font-size: 0.8125rem; }
+.rowName { font-weight: 500; }
+.rowType { font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.6; }
+.rowTag { padding: 0.35rem 0.6rem; border-radius: 5px; background: #feefb8; color: var(--dark); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ---------- Contact ---------- */
+.close {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: clamp(4rem, 9vw, 8rem);
+  padding: clamp(2rem, 5vw, 4rem) 0;
+  border-radius: 14px;
+  background: var(--dark);
+  color: var(--on-dark);
+}
+.close > * { padding: 0 calc(var(--inset) + 0.5rem); }
+.closeMain { display: grid; justify-items: start; gap: 1.25rem; }
+.closeTitle { max-width: 16ch; font-family: var(--font-condensed); font-weight: 800; font-size: clamp(2.6rem, 6.5vw, 5.2rem); line-height: 0.9; text-transform: uppercase; }
+.closeEmail { font-size: clamp(1.25rem, 2.4vw, 2rem); color: var(--on-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+.closeActions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.primary,
+.secondary { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; padding: 0 1.15rem; border-radius: 8px; font-size: 0.9375rem; text-decoration: none; }
+.primary { background: #feefb8; color: var(--dark); }
+.primary:hover { background: #fff7d6; }
+.secondary { box-shadow: inset 0 0 0 1px rgb(254 239 184 / 0.35); color: var(--on-dark); }
+.secondary:hover { background: rgb(254 239 184 / 0.1); }
+.close .sectionLabel { color: rgb(254 239 184 / 0.75); }
+
+/* ---------- Thumbnails ---------- */
+.thumb { display: block; position: relative; width: 100%; overflow: hidden; border-radius: var(--radius); background: var(--fill, var(--mat)); box-shadow: 0 0 0 1px var(--line), 0 18px 34px -26px rgb(31 21 20 / 0.55); cursor: zoom-in; }
+.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.thumb[data-fit="top"] img { object-fit: cover; object-position: 50% 0%; }
+.thumb:hover img { transform: scale(1.025); }
+.thumb:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* ---------- Case study ---------- */
+/* Header (title beside the facts), the logo wide, then the story as rows: heading left, text right,
+ * on the page's two-column grid. The applications sit between the direction and the outcome. */
+.case { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 2rem; }
+.caseHead { display: grid; gap: 1.5rem; }
+.caseName { margin-top: 0.5rem; font-family: var(--font-condensed);
+  text-transform: uppercase; font-weight: 800; font-size: clamp(2.6rem, 6vw, 5rem); line-height: 0.9; text-wrap: balance; }
+.caseMeta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; margin: 0; }
+.caseMeta > div { display: grid; gap: 0.3rem; padding-top: 0.75rem; border-top: 1px solid var(--line); }
+.caseMeta dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.caseMeta dd { margin: 0; font-size: 0.95rem; line-height: 1.45; }
+.caseHero { aspect-ratio: 16 / 9; border-radius: var(--radius); }
+/* The whole logo, wordmark included, on a sky tone close to its own background. */
+.caseHero { background: #dcebf8; }
+.caseHero img { object-fit: contain; }
+.caseStory { display: grid; }
+.caseRow { display: grid; gap: 0.5rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+.caseRowTitle { font-family: var(--font-condensed); font-weight: 800; font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1; text-transform: uppercase; }
+.caseRowText { display: grid; gap: 1rem; max-width: 60ch; font-size: 1.0625rem; line-height: 1.65; text-wrap: pretty; }
+.caseArt { display: grid; gap: 12px; align-items: start; }
+.caseGallery { display: grid; gap: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.caseGalleryHead { display: grid; gap: 0.4rem; }
+.caseGalleryNote { font-size: 0.95rem; color: var(--muted); }
+.brochure { display: grid; gap: 0.6rem; }
+.brochurePages { display: grid; gap: 12px; }
+.menuPages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.swatches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 1rem; margin: 0; padding: 0; list-style: none; width: 100%; }
+.swatches li { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 0.6rem; }
+.swatch { grid-row: span 2; width: 28px; height: 28px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line); }
+.hex { font-family: var(--font-ui); font-size: 0.6875rem; color: var(--muted); }
+
+
+/* ---------- Falling entrances (after the reference) ----------
+ * The page observer adds [data-in]; nothing is hidden until it marks the page ready ([data-drops]).
+ *   (empty)  paragraphs: 40px lower with a 3° skew
+ *   label    small labels: 20px in from the left
+ *   row      buttons: 96% scale, 32px lower
+ *   panel    cards, rows and panels: 96% scale, 48px lower
+ *   letters  headings: the container stays, its letters rise (FallText) */
+@media (prefers-reduced-motion: no-preference) {
+  .page[data-drops] [data-drop] {
+    --drop-from: translate3d(0, 40px, 0) skewY(3deg);
+    opacity: 0;
+    transform: var(--drop-from);
+    transform-origin: 0 0;
+    transition:
+      transform 0.8s var(--ease-out) var(--drop-delay, 0ms),
+      opacity 0.6s cubic-bezier(0.22, 0.7, 0.25, 1) var(--drop-delay, 0ms);
+  }
+  .page[data-drops] [data-drop="label"] { --drop-from: translate3d(-20px, 0, 0); }
+  .page[data-drops] [data-drop="row"] { --drop-from: translate3d(0, 32px, 0) scale(0.96); transform-origin: 50% 100%; }
+  .page[data-drops] [data-drop="panel"] { --drop-from: translate3d(0, 48px, 0) scale(0.96); transform-origin: 50% 100%; }
+  .page[data-drops] [data-drop="letters"] { opacity: 1; transform: none; transition: none; }
+  .page[data-drops] [data-drop][data-in] { opacity: 1; transform: none; }
+  /* Case study images settle from a slight zoom inside their frames. */
+  .page[data-drops] [data-drop] .thumb img { transform: scale(1.12); transition: transform 1.1s var(--ease-out) var(--drop-delay, 0ms); }
+  .page[data-drops] [data-drop][data-in] .thumb img { transform: none; }
+  .page[data-drops] [data-drop][data-in] .thumb:hover img { transform: scale(1.025); }
+}
+
+/* ---------- Wider screens ---------- */
+@media (min-width: 760px) {
+  /* Four columns: lines at each quarter, plus the right edge. */
+  .columns {
+    border-inline: 0;
+    background: linear-gradient(to right, var(--guide) 1px, transparent 1px) 0 0 / 25% 100% repeat-x;
+    box-shadow: inset -1px 0 0 var(--guide);
+  }
+  .heroMeta { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  /* An extra last row takes up the tickets' height, so "WORK" and "AERAA" stay together. */
+  .hero { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: auto auto auto 1fr; }
+  .heroMeta { grid-column: 1 / -1; }
+  .heroTitle { grid-column: 1 / 4; grid-row: 2; }
+  .heroShadow { grid-column: 1 / 4; grid-row: 3; }
+  .heroIndex { grid-column: 4; grid-row: 2 / -1; align-self: start; margin-top: 2.75rem; }
+  .heroTitle, .heroShadow { font-size: clamp(7rem, 22vw, 24rem); }
+
+  .strip { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: center; }
+  .stripLeft { grid-column: 1 / 3; }
+  .stripText { grid-column: 3 / -1; }
+
+  .approach { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .approach > * { grid-column: 2 / -1; }
+  .approach > .sectionLabel { grid-column: 1; grid-row: 1; padding-top: 0.9rem; }
+  .approachLead { grid-row: 1; }
+
+  .sectionHead { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
+  .sectionHead > * { grid-column: 2 / span 2; }
+  .sectionHead > .sectionLabel { grid-column: 1; grid-row: 1; padding-top: 1rem; }
+  .sectionTitle { grid-row: 1; }
+
+  .notes { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+  .notesColumns {
+    background: linear-gradient(to right, rgb(254 239 184 / 0.08) 1px, transparent 1px) 0 0 / 25% 100% repeat-x;
+  }
+  .notesSide { grid-column: 1; }
+  .notesMain { grid-column: 2 / -1; }
+
+  .row { grid-template-columns: calc(25% - 22px) minmax(0, 1fr) auto; padding-left: 8px; }
+  .row::before { left: calc(25% - 6px); }
+  .row::after { left: calc(25% - 11px); }
+  .rowThumb { height: 72px; }
+
+  .close { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .close > .sectionLabel { grid-column: 1; }
+  .closeMain { grid-column: 2 / -1; }
+
+  /* Case study rows: the heading in the first column, the text across the rest. */
+  .caseHead { grid-template-columns: 1fr; }
+  .caseMeta { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
+  .caseMeta > div { padding-inline: var(--inset); }
+  .caseRow { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); padding: 1.75rem 0; }
+  .caseRow > * { padding: 0 var(--inset); }
+  .caseArt { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .caseHero { aspect-ratio: 21 / 9; }
+  .caseGalleryHead { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); align-items: baseline; }
+  .caseGalleryHead > * { padding: 0 var(--inset); }
+  .brochurePages { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .menuPages { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

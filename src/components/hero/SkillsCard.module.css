@@ -1,0 +1,208 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: max(var(--space-2), 0.8cqi);
+}
+
+.tab {
+  display: grid;
+  place-items: center;
+  min-width: 6.9cqi;
+  min-height: 4.45cqi;
+  padding: max(var(--space-2), 0.6cqi) max(var(--space-4), 1.4cqi);
+  background: var(--color-surface-dark);
+  color: var(--color-text-on-dark);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  font-family: var(--font-ui);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-label);
+  line-height: 1;
+}
+
+.list {
+  width: 100%;
+  background: var(--color-surface-charcoal);
+  color: var(--color-text-on-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* Each row is a button (hover, focus and tap reveal its description) styled exactly as the
+ * original static row; only the interactive states below are new. */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: max(36px, 2.93cqi);
+  padding-inline: max(var(--space-3), 1cqi);
+  font-family: var(--font-ui);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-label);
+  line-height: var(--leading-tight);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-standard),
+    padding var(--duration-base) var(--ease-standard);
+}
+
+/* Active row: a soft lift of the background, the label nudged in, the star brightened. */
+.row[data-active] {
+  background: rgb(254 239 184 / 0.08);
+  padding-left: calc(max(var(--space-3), 1cqi) + 4px);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--color-text-on-dark);
+  outline-offset: -4px;
+  border-radius: 6px;
+}
+
+.item + .item {
+  border-top: 1px solid var(--color-surface-charcoal-divider);
+}
+
+/* Highlighted row: set apart by a heavier divider, a Blue marker bar and star.
+ * The label stays light so it keeps readable contrast on the charcoal panel. */
+.item[data-highlight] .row {
+  box-shadow: inset 3px 0 0 var(--color-accent-red);
+  font-weight: var(--weight-medium);
+}
+
+.item[data-highlight] .star {
+  color: var(--color-accent-red);
+}
+
+.item + .item[data-highlight] {
+  border-top: max(6px, 0.55cqi) solid rgb(46 32 31 / 0.9);
+}
+
+.star {
+  flex: none;
+  width: max(14px, 1.3cqi);
+  height: max(14px, 1.3cqi);
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.row[data-active] .star { transform: scale(1.15) rotate(-12deg); }
+
+/* ---------- Floating annotation card ----------
+ * Portalled to <body>; placed by SkillsCard (data-side tells which way it eases in). Reads like a
+ * small note from a journal: index number and star, the skill set in the editorial italic, then
+ * the description. */
+.note {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 90; /* above every hero card, below the fixed nav */
+  width: 300px;
+  padding: 16px 18px 18px;
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgb(254 239 184 / 0.07), transparent 60%),
+    var(--color-surface-dark);
+  color: var(--color-text-on-dark);
+  border: 1px solid rgb(254 239 184 / 0.14);
+  box-shadow:
+    0 24px 50px -24px rgb(31 21 20 / 0.6),
+    0 2px 8px rgb(31 21 20 / 0.18);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  --enter-x: 0px;
+  --enter-y: 8px;
+  transform:
+    translate3d(calc(var(--enter-x) + var(--tilt-x, 0px)), calc(var(--enter-y) + var(--tilt-y, 0px)), 0)
+    rotate(var(--tilt-r, 0deg));
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    visibility 0s linear var(--duration-base),
+    transform var(--duration-slow) var(--ease-out-expo),
+    top var(--duration-base) var(--ease-out-expo),
+    left var(--duration-base) var(--ease-out-expo);
+}
+
+/* Ease in from the panel's direction. */
+.note[data-side="left"]  { --enter-x: 10px; --enter-y: 4px; }
+.note[data-side="right"] { --enter-x: -10px; --enter-y: 4px; }
+.note[data-side="above"] { --enter-y: -6px; }
+
+.note[data-open] {
+  opacity: 1;
+  visibility: visible;
+  --enter-x: 0px;
+  --enter-y: 0px;
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    visibility 0s,
+    transform var(--duration-slow) var(--ease-out-expo),
+    top var(--duration-base) var(--ease-out-expo),
+    left var(--duration-base) var(--ease-out-expo);
+}
+
+/* A small tab pointing back at the panel when the card sits beside it. */
+.note[data-side="left"]::after,
+.note[data-side="right"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: var(--color-surface-dark);
+  border: 1px solid rgb(254 239 184 / 0.14);
+  translate: 0 -50%;
+  rotate: 45deg;
+}
+.note[data-side="left"]::after  { right: -6px; border-left: 0; border-bottom: 0; }
+.note[data-side="right"]::after { left: -6px; border-right: 0; border-top: 0; }
+
+.noteMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgb(254 239 184 / 0.2);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-on-dark-muted);
+}
+
+.noteStar {
+  width: 12px;
+  height: 12px;
+  color: var(--color-text-on-dark);
+}
+
+.noteTitle {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 1.69rem;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+}
+
+.noteBody {
+  margin-top: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-text-on-dark-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note,
+  .note[data-open] {
+    transform: none;
+    transition: opacity 120ms linear, visibility 0s;
+  }
+}

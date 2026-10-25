@@ -1,0 +1,18 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.panel {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+
+/* Provisional palette, kept in step with the .theme-studio tokens. */
+.panel[data-tone="sage"] { background: #c4dae8; }
+.panel[data-tone="cream"] { background: #faf1ca; }

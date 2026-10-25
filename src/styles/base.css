@@ -1,0 +1,106 @@
+/* Minimal reset + global element defaults. Values come from tokens.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background: var(--color-canvas);
+  color: var(--color-text-body);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Section snapping, enabled per page from JS (work page, large screens only). */
+html.snap-sections {
+  scroll-snap-type: y proximity;
+}
+
+/* Page-level backgrounds behind the fixed nav and on overscroll. */
+body[data-theme="studio"] { background: #faf1ca; }
+body[data-theme="journal"] { background: #eae0c8; }
+
+.skip-link {
+  position: fixed;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: calc(var(--z-overlay) + 1);
+  padding: var(--space-2) var(--space-4);
+  background: #2e201f;
+  color: #fff8dc;
+  font-size: 0.875rem;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible { transform: none; }
+
+main:focus { outline: none; }

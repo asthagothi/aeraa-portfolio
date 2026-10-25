@@ -1,0 +1,122 @@
+.outro {
+  background: linear-gradient(to bottom, var(--color-canvas), #8f8e8d);
+  padding: var(--space-8) var(--gutter) var(--space-24);
+  overflow: clip;
+  text-align: center;
+}
+
+.visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(320px, 52vh, 560px);
+}
+
+/* The converging row only exists while animated. */
+.row {
+  display: none;
+}
+
+.outro[data-animated] .row {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.rowPin {
+  grid-area: 1 / 1;
+  width: clamp(90px, 11vw, 170px);
+}
+
+/* Dark vertical frame — sibling of the Page 1 call widget. */
+.frame {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(120% 70% at 50% 30%, rgb(255 255 255 / 0.08), transparent 60%),
+    var(--color-surface-dark);
+  box-shadow: var(--shadow-float);
+}
+
+.play {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.play::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  margin: 21px 0 0 26px;
+  border-left: 18px solid #fff;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+}
+
+.frameHandle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-5);
+  font-size: var(--text-ui-sm);
+  color: var(--color-text-on-dark-muted);
+}
+
+.copy {
+  margin-top: var(--space-10);
+}
+
+.eyebrow {
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-strong);
+}
+
+.heading {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-light);
+  font-size: clamp(2.75rem, 1rem + 6vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-strong);
+}
+
+.body {
+  margin: var(--space-4) auto 0;
+  max-width: 28rem;
+  font-size: 1.05rem;
+  color: var(--color-text-strong);
+}
+
+.link {
+  display: inline-grid;
+  place-items: center;
+  min-height: var(--tap-target);
+  margin-top: var(--space-6);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-dark);
+  color: var(--color-text-on-dark);
+  font-weight: var(--weight-semibold);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.link:hover {
+  background: #000;
+}
+
+@media (max-width: 767px) {
+  .outro { padding-block: var(--space-16); }
+}

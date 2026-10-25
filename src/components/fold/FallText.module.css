@@ -1,0 +1,18 @@
+/* Falling letters (see FallText.tsx). Hidden only once FoldHome marks the page ready
+ * ([data-drops]), so without JS or with reduced motion the heading simply shows. */
+.word { display: inline-block; white-space: nowrap; }
+.char { display: inline-block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :global([data-drops]) :global([data-drop="letters"]) .char {
+    opacity: 0;
+    transform: translate3d(0, 72px, 0) skewX(-8deg);
+    transition:
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--drop-delay, 0ms) + var(--ci, 0) * 18ms),
+      opacity 0.5s cubic-bezier(0.22, 0.7, 0.25, 1) calc(var(--drop-delay, 0ms) + var(--ci, 0) * 18ms);
+  }
+  :global([data-drops]) :global([data-drop="letters"][data-in]) .char {
+    opacity: 1;
+    transform: none;
+  }
+}

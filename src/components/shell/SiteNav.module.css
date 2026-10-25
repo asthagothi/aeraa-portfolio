@@ -1,0 +1,130 @@
+.nav {
+  --nav-ink: var(--color-text-strong);
+  --nav-accent: #432f2e;
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--gutter);
+  pointer-events: none; /* only the controls catch clicks; the page stays usable beneath */
+  font-family: var(--font-ui);
+  color: var(--nav-ink);
+}
+
+.nav[data-tone="studio"] { background: #faf1ca; }
+.nav[data-tone="journal"] { background: #eae0c8; }
+.nav[data-tone="home"] { background: rgb(250 241 202 / 0.5); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.nav[data-tone="studio"],
+.nav[data-tone="journal"],
+.nav[data-tone="home"] { pointer-events: auto; padding-block: var(--space-2); }
+
+.nav > * {
+  pointer-events: auto;
+}
+
+.brand {
+  display: inline-grid;
+  place-items: center;
+  min-height: var(--tap-target);
+  /* The logo: Vogue (all capitals), used only for the name. */
+  font-family: var(--font-logo);
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.links ul {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.link {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-height: var(--tap-target);
+  padding-inline: var(--space-3);
+  font-size: 0.8rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Active page: a small dot under the label. */
+.link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: var(--nav-accent);
+  transform: scale(0);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.link:hover::after { transform: scale(0.6); }
+.link[aria-current="page"]::after { transform: scale(1); }
+
+.toggle {
+  display: none;
+  min-height: var(--tap-target);
+  min-width: var(--tap-target);
+  padding-inline: var(--space-3);
+  font-size: 0.8rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Mobile menu ---------- */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  align-content: center;
+  padding: var(--space-24) var(--gutter);
+  background: #faf1ca;
+  color: #2e201f;
+}
+
+.sheet[hidden] { display: none; }
+
+.sheet ul {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.sheetLink {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  min-height: var(--tap-target);
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-size: clamp(2.93rem, 10.4vw, 4.55rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+.sheetLink[aria-current="page"] { font-style: italic; color: #432f2e; }
+
+.sheetIndex {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 767px) {
+  .links { display: none; }
+  .toggle { display: inline-grid; place-items: center; }
+  .nav[data-open] { color: #2e201f; }
+}

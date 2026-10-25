@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 2 — Art direction preview</title>
+    <!-- Dev-only design preview. Not part of the production build. Uses the real Page 1 tokens and fonts. -->
+    <link rel="stylesheet" href="/src/index.css" />
+    <script type="module">import '/src/styles/fonts.ts'</script>
+    <style>
+      body { background: var(--color-canvas); color: var(--color-text-strong); }
+      .wrap { max-width: 78rem; margin-inline: auto; padding: var(--space-12) var(--gutter) var(--space-24); }
+      header.top h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1rem + 4vw, 4rem); line-height: .95; letter-spacing: -0.03em; color: #fff; text-shadow: var(--shadow-hero-text); }
+      header.top p { max-width: 46rem; margin-top: var(--space-4); font-size: 1rem; }
+      .note { margin-top: var(--space-6); padding: var(--space-4) var(--space-5); background: var(--color-surface-glass); border-radius: var(--radius-md); max-width: 50rem; font-size: .95rem; }
+      .note strong { font-weight: 600; }
+      .rec { margin-top: var(--space-6); padding: var(--space-5) var(--space-6); background: var(--color-surface-dark); color: var(--color-text-on-dark); border-radius: var(--radius-lg); max-width: 50rem; }
+      .rec h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; margin-bottom: var(--space-2); }
+      .rec p + p { margin-top: var(--space-2); }
+      .rec em { color: #9db4ff; font-style: normal; }
+
+      section.dir { margin-top: var(--space-16); }
+      .dir-head { display: flex; align-items: baseline; gap: var(--space-4); flex-wrap: wrap; }
+      .dir-head .num { font-family: var(--font-display); font-weight: 300; font-size: 3rem; line-height: 1; color: #fff; text-shadow: var(--shadow-hero-text); }
+      .dir-head h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 1rem + 2vw, 2.4rem); letter-spacing: -0.02em; }
+      .dir-head .tag { font-size: .8rem; padding: 4px 10px; border-radius: 999px; background: var(--color-surface-dark); color: #fff; }
+
+      /* ---------- Scrubbable scene frame ---------- */
+      .frame { --p: .55; position: relative; margin-top: var(--space-5); aspect-ratio: 16 / 9; border-radius: var(--radius-lg); overflow: hidden; container-type: inline-size; box-shadow: var(--shadow-card); }
+      .scrub { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); font-size: .85rem; }
+      .scrub input { flex: 1; accent-color: var(--color-surface-dark); }
+      .scrub output { width: 3.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+      .pin { position: absolute; border-radius: 1.1cqi; overflow: hidden; box-shadow: 0 1cqi 2.5cqi -1cqi rgb(0 0 0 / .35); }
+      .pin::after { content: 'PIN · placeholder'; position: absolute; left: .7cqi; bottom: .6cqi; font: 500 .75cqi/1 var(--font-ui); letter-spacing: .04em; color: rgb(255 255 255 / .85); background: rgb(0 0 0 / .28); padding: .3cqi .5cqi; border-radius: .4cqi; }
+      .c1 { background: linear-gradient(160deg, #e9e2d6, #c9b9a3); }
+      .c2 { background: linear-gradient(160deg, #2c2b2f, #57545c); }
+      .c3 { background: linear-gradient(160deg, #e9c9c6, #b98d8b); }
+      .c4 { background: linear-gradient(160deg, #a9b7cc, #5d6f8e); }
+      .c5 { background: linear-gradient(160deg, #f3f0ea, #d9d3c8); }
+      .c6 { background: linear-gradient(160deg, #c7c2a8, #8c876c); }
+
+      /* ---------- Direction 1: Editorial ---------- */
+      .d1 { background: #ecebe7; }
+      .d1 .eyebrow { position: absolute; left: 5cqi; top: 6cqi; font: 500 1cqi/1 var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: #6a6a6e; }
+      .d1 .handle { position: absolute; left: 4.6cqi; top: 9cqi; font: 600 8.6cqi/.86 var(--font-display); letter-spacing: -0.05em; color: #111; transform: translateY(calc((1 - var(--p)) * 6cqi)); opacity: calc(.3 + var(--p)); }
+      .d1 .cats { position: absolute; left: 5cqi; top: 27cqi; width: 30cqi; font: 400 1.35cqi/1.5 var(--font-ui); color: #333; }
+      .d1 .rail { position: absolute; left: 5cqi; bottom: 6cqi; width: 32cqi; border-top: 1px solid #111; }
+      .d1 .rail div { display: flex; justify-content: space-between; padding: .9cqi 0; border-bottom: 1px solid rgb(0 0 0 / .15); font: 400 1.15cqi/1 var(--font-ui); }
+      .d1 .rail b { font: 600 1.6cqi/1 var(--font-display); }
+      .d1 .rail small { display: block; margin-top: .8cqi; font-size: .9cqi; color: #6a6a6e; }
+      .d1 .col { position: absolute; top: 0; width: 15cqi; display: grid; gap: 1.4cqi; }
+      .d1 .col .pin { position: relative; width: 100%; }
+      .d1 .col.a { left: 42cqi; transform: translateY(calc(8cqi - var(--p) * 22cqi)); }
+      .d1 .col.b { left: 58.5cqi; transform: translateY(calc(-4cqi - var(--p) * 10cqi)); }
+      .d1 .col.c { left: 75cqi; transform: translateY(calc(14cqi - var(--p) * 30cqi)); }
+      .d1 .callout { position: absolute; left: 76cqi; top: 33cqi; display: flex; align-items: center; gap: .8cqi; opacity: clamp(0, calc((var(--p) - .5) * 4), 1); }
+      .d1 .callout i { width: 6cqi; border-top: 1px dashed #111; }
+      .d1 .callout span { font: 500 1.05cqi/1.3 var(--font-ui); background: #111; color: #fff; padding: .6cqi .9cqi; border-radius: .5cqi; white-space: nowrap; }
+
+      /* ---------- Direction 2: Cinematic (continues Page 1) ---------- */
+      .d2 { background: linear-gradient(var(--color-canvas-top), var(--color-canvas) 62%, var(--color-canvas-bottom)); }
+      .d2 .word { position: absolute; inset: 0; display: grid; place-items: start center; padding-top: 6cqi; font: 600 11cqi/.86 var(--font-display); letter-spacing: -0.045em; color: #fff; text-shadow: var(--shadow-hero-text); }
+      .d2 .word span { display: block; opacity: clamp(0, calc((var(--p) - .25) * 3), 1); transform: translateY(calc((1 - var(--p)) * 4cqi)); }
+      .d2 .word small { display: block; font: 300 3.2cqi/1 var(--font-display); letter-spacing: .02em; text-align: center; margin-bottom: .6cqi; }
+      /* Page 1 figure shrinks into the first pin */
+      .d2 .figure { position: absolute; left: 50%; top: 50%; width: calc(34cqi - var(--p) * 20cqi); aspect-ratio: 2 / 3; translate: calc(-50% - var(--p) * 2cqi) calc(-42% + var(--p) * 6cqi); border-radius: calc(var(--p) * 1.6cqi); overflow: hidden; background: #c9c8c6; box-shadow: 0 calc(var(--p) * 2cqi) calc(var(--p) * 4cqi) -1cqi rgb(0 0 0 / .35); z-index: 3; }
+      .d2 .figure img { width: 100%; height: 100%; object-fit: cover; }
+      .d2 .fly { transition: none; }
+      .d2 .fly.f1 { left: calc(14cqi - (1 - var(--p)) * 30cqi); top: 22cqi; width: 12cqi; height: 17cqi; rotate: calc((1 - var(--p)) * -18deg); }
+      .d2 .fly.f2 { left: 27.5cqi; top: calc(15cqi + (1 - var(--p)) * 40cqi); width: 12cqi; height: 21cqi; rotate: calc((1 - var(--p)) * 12deg); }
+      .d2 .fly.f3 { left: 60.5cqi; top: calc(18cqi - (1 - var(--p)) * 40cqi); width: 12cqi; height: 15cqi; rotate: calc((1 - var(--p)) * 20deg); }
+      .d2 .fly.f4 { left: calc(74cqi + (1 - var(--p)) * 30cqi); top: 20cqi; width: 12cqi; height: 19cqi; rotate: calc((1 - var(--p)) * -10deg); }
+      .d2 .fly.f5 { left: calc(14cqi - (1 - var(--p)) * 20cqi); top: calc(41cqi + (1 - var(--p)) * 20cqi); width: 12cqi; height: 12cqi; }
+      .d2 .fly.f6 { left: calc(74cqi + (1 - var(--p)) * 20cqi); top: calc(41cqi + (1 - var(--p)) * 20cqi); width: 12cqi; height: 13cqi; }
+      .d2 .stats { position: absolute; left: 3.5cqi; bottom: 3.5cqi; display: flex; gap: 2cqi; align-items: center; padding: 1.2cqi 2cqi; border-radius: 999px; background: var(--color-surface-dark); color: #fff; box-shadow: var(--shadow-float); transform: translateY(calc((1 - clamp(0, (var(--p) - .6) * 3, 1)) * 14cqi)); }
+      .d2 .stats div { font: 400 .95cqi/1.2 var(--font-ui); color: var(--color-text-on-dark-muted); }
+      .d2 .stats b { display: block; font: 600 1.7cqi/1 var(--font-ui); color: #fff; }
+      .d2 .bar { position: absolute; right: 3.5cqi; bottom: 4cqi; width: 26cqi; display: flex; justify-content: space-between; align-items: center; padding: .7cqi 1cqi; background: #fff; border-radius: .5cqi; font: 400 1.05cqi/1 var(--font-ui); box-shadow: var(--shadow-soft); transform: translateY(calc((1 - clamp(0, (var(--p) - .7) * 4, 1)) * 12cqi)); }
+
+      /* ---------- Direction 3: Minimal ---------- */
+      .d3 { background: #c9c8c6; }
+      .d3 .eyebrow { position: absolute; left: 7cqi; top: 8cqi; font: 500 1cqi/1 var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: #3b3b3f; }
+      .d3 .big { position: absolute; left: 6.6cqi; top: 11cqi; font: 300 6cqi/1 var(--font-display); letter-spacing: -0.02em; color: #111; }
+      .d3 .big b { font-weight: 600; }
+      .d3 .solo { left: 60cqi; top: 9cqi; width: 22cqi; height: 33cqi; clip-path: inset(calc((1 - var(--p)) * 100%) 0 0 0 round 1.1cqi); }
+      .d3 .line { position: absolute; left: 7cqi; right: 7cqi; bottom: 9cqi; height: 1px; background: rgb(0 0 0 / .25); }
+      .d3 .line::before { content: ''; position: absolute; inset: 0; background: #111; transform-origin: left; transform: scaleX(var(--p)); }
+      .d3 .steps { position: absolute; left: 7cqi; right: 7cqi; bottom: 4cqi; display: grid; grid-template-columns: repeat(4, 1fr); font: 400 1.15cqi/1.3 var(--font-ui); color: #111; }
+      .d3 .steps span { position: relative; padding-top: 1.6cqi; }
+      .d3 .steps span::before { content: ''; position: absolute; top: -.6cqi; left: 0; width: 1.2cqi; height: 1.2cqi; border-radius: 50%; background: #111; }
+      .d3 .steps span:nth-child(2) { opacity: clamp(.25, calc((var(--p) - .25) * 4), 1); }
+      .d3 .steps span:nth-child(3) { opacity: clamp(.25, calc((var(--p) - .5) * 4), 1); }
+      .d3 .steps span:nth-child(4) { opacity: clamp(.25, calc((var(--p) - .75) * 4), 1); }
+
+      /* ---------- Write-up ---------- */
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-4); margin-top: var(--space-5); }
+      .grid div { background: var(--color-surface-glass); border-radius: var(--radius-md); padding: var(--space-4); font-size: .92rem; }
+      .grid h3 { font-family: var(--font-ui); font-weight: 600; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+      .grid .pros h3 { color: #1b7f3b; } .grid .cons h3 { color: #b4232c; }
+
+      footer { margin-top: var(--space-16); font-size: .9rem; max-width: 50rem; }
+      footer li { margin-left: 1.2em; margin-top: var(--space-2); }
+
+      @media (prefers-reduced-motion: reduce) { .frame * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <h1>Page 2 — Pinterest &amp;<br />Affiliate Marketing</h1>
+        <p>Three art directions, each continuing straight down from the existing About Me page in one continuous scroll. Drag the <strong>scroll</strong> slider under each scene to see how its key transition would move. All pins are clearly marked placeholders until the real pin images are supplied.</p>
+
+        <div class="rec">
+          <h2>Recommendation: Direction 2, “The Board Assembles”, with Direction 1’s editorial typography</h2>
+          <p>Page 1 is built from <em>interface objects floating in a photo studio</em>: the intro card, the phone-call widget, the skills panel and the browser bar, all over the portrait on the grey wall. Direction 2 carries that language straight into Pinterest. The portrait becomes the first pin, the pins themselves are the floating objects, the analytics arrive as a phone-style widget, and the Page 1 browser bar becomes the affiliate destination.</p>
+          <p>It also reuses what is already built and tested (GSAP + ScrollTrigger and the floating-card system), so it adds no new dependencies. Pinning is limited to two short scenes, the board forming and the affiliate journey, so scrolling never feels trapped.</p>
+        </div>
+
+        <div class="note">
+          <strong>Figures in these mocks are placeholders.</strong> The analytics screenshot shows <strong>3.7l</strong> impressions, <strong>17t</strong> engagements, <strong>33</strong> outbound clicks, <strong>3.2t</strong> saves, <strong>3l</strong> total audience and <strong>14t</strong> engaged audience for <strong>20/09/26 – 20/10/26</strong>. The “l / t” suffixes look like lakh and thousand, so 3.7l would be about 370,000. That needs confirming before anything is published.
+        </div>
+      </header>
+
+      <!-- ===================== Direction 1 ===================== -->
+      <section class="dir" aria-labelledby="d1-title">
+        <div class="dir-head"><span class="num" aria-hidden="true">01</span><h2 id="d1-title">Editorial Moodboard</h2><span class="tag">Editorial &amp; artistic</span></div>
+        <div class="frame d1" id="f1" aria-hidden="true">
+          <span class="eyebrow">02 — Pinterest</span>
+          <span class="handle">style<br />aeraa</span>
+          <p class="cats">Fashion finds · Outfit inspiration · Lifestyle · Beauty · Aesthetic collages · Original creative pins</p>
+          <div class="col a"><div class="pin c1" style="aspect-ratio:2/3"></div><div class="pin c3" style="aspect-ratio:3/4"></div><div class="pin c5" style="aspect-ratio:2/3"></div></div>
+          <div class="col b"><div class="pin c2" style="aspect-ratio:3/4"></div><div class="pin c4" style="aspect-ratio:2/3"></div><div class="pin c6" style="aspect-ratio:1"></div></div>
+          <div class="col c"><div class="pin c6" style="aspect-ratio:2/3"></div><div class="pin c1" style="aspect-ratio:3/5"></div><div class="pin c3" style="aspect-ratio:3/4"></div></div>
+          <div class="callout"><i></i><span>Featured product → Amazon (affiliate link)</span></div>
+          <div class="rail">
+            <div><span>Impressions</span><b>—</b></div>
+            <div><span>Saves</span><b>—</b></div>
+            <div><span>Outbound clicks</span><b>—</b></div>
+            <small>Historical, 20/09/26 – 20/10/26 · figures pending confirmation</small>
+          </div>
+        </div>
+        <label class="scrub">Scroll <input type="range" min="0" max="100" value="55" data-frame="f1" aria-label="Scrub Direction 1 scroll position" /><output>55%</output></label>
+        <div class="grid">
+          <div><h3>Look</h3>A digital magazine spread. Your handle is set as oversized type, with thin rules and small-caps captions on a lighter paper tone of the Page 1 grey.</div>
+          <div><h3>Pinterest content</h3>A three-column masonry where each column scrolls at its own speed (parallax), so the board feels alive without anything being pinned.</div>
+          <div><h3>Affiliate</h3>Annotated pins: a dashed leader line runs from a pin to a “featured product → Amazon” caption, with the disclosure set like a magazine footnote.</div>
+          <div><h3>Transition from Page 1</h3>“DESIGNER” slides off to the left as “styleaeraa” slides in. The grey wall lightens to paper while the portrait scrolls away normally.</div>
+          <div><h3>Link to Page 1</h3>Same fonts, display treatment and grid, but the floating-UI motif is mostly left behind.</div>
+          <div class="pros"><h3>Advantages</h3>Very readable, light on motion, easy to update, and degrades gracefully on mobile.</div>
+          <div class="cons"><h3>Drawbacks</h3>The weakest tie to Page 1’s floating-object identity, and it can drift toward a familiar magazine template.</div>
+        </div>
+      </section>
+
+      <!-- ===================== Direction 2 ===================== -->
+      <section class="dir" aria-labelledby="d2-title">
+        <div class="dir-head"><span class="num" aria-hidden="true">02</span><h2 id="d2-title">The Board Assembles</h2><span class="tag">Cinematic · recommended</span></div>
+        <div class="frame d2" id="f2" aria-hidden="true">
+          <div class="word"><span><small>VISUAL CURATION</small>PINTEREST</span></div>
+          <div class="pin fly f1 c1"></div><div class="pin fly f2 c2"></div><div class="pin fly f3 c3"></div>
+          <div class="pin fly f4 c4"></div><div class="pin fly f5 c5"></div><div class="pin fly f6 c6"></div>
+          <div class="figure"><img src="/src/assets/hero/portrait-cutout-1024.webp" alt="" /></div>
+          <div class="stats">
+            <div><b>—</b>Impressions</div><div><b>—</b>Saves</div><div><b>—</b>Outbound clicks</div>
+            <div style="max-width:12cqi">20/09–20/10/26 · historical</div>
+          </div>
+          <div class="bar"><span>AA</span><span>🔒 amazon storefront (affiliate)</span><span>↻</span></div>
+        </div>
+        <label class="scrub">Scroll <input type="range" min="0" max="100" value="55" data-frame="f2" aria-label="Scrub Direction 2 scroll position" /><output>55%</output></label>
+        <div class="grid">
+          <div><h3>Look</h3>The same grey studio wall, white display type and floating UI objects as Page 1. Page 2 reads as the next scene in the same world.</div>
+          <div><h3>Pinterest content</h3>In a pinned scene, the portrait shrinks into the first pin while your real pins fly in from the edges and settle into a masonry board. The board then releases into a normal scrolling gallery with links to the original pins.</div>
+          <div><h3>Analytics</h3>A dark phone-style widget, the sibling of Page 1’s call widget, slides up over the board. It shows the historical figures with their date range and notes the difference between impressions, saves and outbound clicks.</div>
+          <div><h3>Affiliate</h3>A second short pinned scene zooms into one pin: idea → product → link. Page 1’s browser bar then appears showing your Amazon link, with the disclosure directly beside it.</div>
+          <div><h3>Transitions</h3>In: the portrait shrinks into a pin, which is the strongest possible tie to Page 1. Out: the board’s pins line up into a vertical video frame, a cue for “art in motion” and Page 3.</div>
+          <div class="pros"><h3>Advantages</h3>The most continuous with Page 1, and memorable. It reuses the existing scroll engine and card system, and the visuals lead.</div>
+          <div class="cons"><h3>Drawbacks</h3>The most complex option. Pinned scenes need careful tuning on mobile, so phones get a simplified, unpinned version. It also needs real pin images to fully land.</div>
+        </div>
+      </section>
+
+      <!-- ===================== Direction 3 ===================== -->
+      <section class="dir" aria-labelledby="d3-title">
+        <div class="dir-head"><span class="num" aria-hidden="true">03</span><h2 id="d3-title">Quiet Motion</h2><span class="tag">Minimal &amp; motion-led</span></div>
+        <div class="frame d3" id="f3" aria-hidden="true">
+          <span class="eyebrow">02 — Pinterest &amp; affiliate</span>
+          <p class="big">Fashion, beauty<br />&amp; <b>lifestyle</b>,<br />curated.</p>
+          <div class="pin solo c3"></div>
+          <div class="line"></div>
+          <div class="steps"><span>A pin is discovered</span><span>It introduces an idea or product</span><span>The visitor follows the link</span><span>A product page (affiliate)</span></div>
+        </div>
+        <label class="scrub">Scroll <input type="range" min="0" max="100" value="55" data-frame="f3" aria-label="Scrub Direction 3 scroll position" /><output>55%</output></label>
+        <div class="grid">
+          <div><h3>Look</h3>Generous negative space, one statement at a time, single large images, and thin lines as the only ornament.</div>
+          <div><h3>Pinterest content</h3>Pins are revealed one by one with mask wipes as you scroll, ending in a small, tight grid of selected pins.</div>
+          <div><h3>Affiliate</h3>A four-step line that draws itself as you scroll, lighting each step: pin → idea → link → product.</div>
+          <div><h3>Transition from Page 1</h3>The hero fades out while the grey stays constant, and the first statement rises into the space it leaves.</div>
+          <div><h3>Link to Page 1</h3>Shares the palette and type, but deliberately quieter than Page 1’s busy composition.</div>
+          <div class="pros"><h3>Advantages</h3>Calm, fast, highly accessible, and easy to maintain.</div>
+          <div class="cons"><h3>Drawbacks</h3>Undersells a visual body of work. Pinterest is about abundance, and one image at a time works against that. It can also feel like a different site from Page 1.</div>
+        </div>
+      </section>
+
+      <footer>
+        <h2 style="font-family:var(--font-display);font-weight:600;font-size:1.3rem">Shared across all three</h2>
+        <ul>
+          <li>Single continuous scroll: Page 1 stays exactly as it is, and Page 2 begins where the placeholder “Selected Work” demo currently sits.</li>
+          <li>Only real figures are shown, labelled “historical” with their date range. Monthly views, impressions and outbound clicks stay distinct, and nothing implies sales or earnings.</li>
+          <li>The affiliate disclosure sits next to every affiliate link, and there are no links until your real URLs are supplied.</li>
+          <li>Reduced motion and mobile get a calm, unpinned version with all content visible.</li>
+        </ul>
+      </footer>
+    </div>
+
+    <script>
+      // Scrub each scene's --p (0–1) from its slider.
+      document.querySelectorAll('input[type=range][data-frame]').forEach((input) => {
+        const frame = document.getElementById(input.dataset.frame)
+        const out = input.nextElementSibling
+        const apply = () => { frame.style.setProperty('--p', input.value / 100); out.value = input.value + '%' }
+        input.addEventListener('input', apply)
+        apply()
+      })
+    </script>
+  </body>
+</html>

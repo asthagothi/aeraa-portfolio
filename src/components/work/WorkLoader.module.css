@@ -1,0 +1,115 @@
+/* Work page loader (see WorkLoader.tsx). Timeline:
+ *   digits rise 0.15s–1.5s (0.12s apart); corner squares light at 0.35s, 0.7s, 1.05s, 1.4s;
+ *   the bottom line grows 0.15s–1.75s; hold; the columns lift 2.05s–2.9s (0.07s apart). */
+.loader {
+  --ink: #161111;
+  --accent: #e4572e;
+  --text: rgb(254 239 184 / 0.8);
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  padding: 0 clamp(1rem, 4vw, 3.5rem);
+  pointer-events: none;
+  /* The gutters lift with the first and last columns (see .column box-shadows). */
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: 100%;
+}
+
+.column {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--text);
+  animation: lift 0.75s cubic-bezier(0.7, 0, 0.2, 1) calc(2.05s + var(--i) * 0.07s) both;
+}
+/* The page gutters are dark too, so the loader reads as one sheet. */
+.column:first-child { box-shadow: -80px 0 0 var(--ink); }
+.column:last-of-type { box-shadow: 80px 0 0 var(--ink); }
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+/* Each corner square lights up in turn, like a counter. */
+.square {
+  width: 6px;
+  height: 6px;
+  background: rgb(254 239 184 / 0.25);
+  animation: light 0.2s ease calc(0.35s + var(--i) * 0.35s) both;
+}
+
+.name { display: grid; gap: 0.35rem; padding: 0 0.85rem; font-size: 0.875rem; color: #feefb8; }
+.edition { font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(254 239 184 / 0.6); }
+
+.digit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.09em;
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(9rem, 30vw, 34rem);
+  line-height: 1;
+  text-align: center;
+  color: var(--accent);
+  animation: rise 1.2s cubic-bezier(0.16, 1, 0.3, 1) calc(0.15s + var(--i) * 0.12s) both;
+}
+
+/* The bowed column lines, drawn over the columns. */
+.lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: fade 0.4s ease 2.05s both;
+}
+.lines path { fill: none; stroke: rgb(254 239 184 / 0.14); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+
+/* The line along the bottom, across all four columns. */
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  animation:
+    fill 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both,
+    fade 0.3s ease 2.05s forwards;
+}
+
+@keyframes rise {
+  from { transform: translate3d(0, 100%, 0); }
+  to { transform: none; }
+}
+@keyframes light {
+  to { background: var(--accent); }
+}
+@keyframes fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes fade {
+  to { opacity: 0; }
+}
+@keyframes lift {
+  from { transform: none; }
+  to { transform: translate3d(0, -100%, 0); }
+}
+
+@media (max-width: 599px) {
+  .digit { font-size: 40vw; }
+  .head { padding: 0.75rem 0.45rem; font-size: 0.625rem; }
+  .name { padding: 0 0.45rem; font-size: 0.75rem; }
+}

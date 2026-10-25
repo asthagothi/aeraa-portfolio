@@ -1,0 +1,1218 @@
+/* Home — foldable device. Default rules are the static flow (phones, reduced motion, no JS);
+ * everything under [data-mode="scene"] is the pinned device, sized by --device-w / --device-h. */
+
+.page {
+  position: relative;
+  z-index: 1;
+  --ink-deep: #432f2e;          /* dark screen sections: Chocopie */
+  --glass: #1f1514;             /* the device's glass / screen-off colour (deepest Chocopie) */
+  --on-dark: var(--studio-ivory);
+  --on-dark-muted: rgb(254 239 184 / 0.8);
+  --radius-device: 38px;
+  min-height: 100svh;
+  overflow-x: clip;
+  /* Static flow: soft colour fields at the top of the page, over Vanilla, with paper grain. */
+  background:
+    var(--texture-grain),
+    radial-gradient(circle 70vh at 0% 0%, rgb(196 218 232 / 0.85), transparent 70%),
+    radial-gradient(circle 60vh at 100% 30vh, rgb(254 239 184 / 0.95), transparent 70%),
+    radial-gradient(circle 50vh at 20% 110vh, rgb(234 224 200 / 0.9), transparent 70%),
+    var(--studio-cream);
+}
+
+/* Device finishes (swatches) */
+.page[data-finish="chocopie"] { --finish: #432f2e; --finish-hi: #6e5452; }
+.page[data-finish="ocean"]    { --finish: #0f3c65; --finish-hi: #3a6590; }
+.page[data-finish="blue"]     { --finish: #c4dae8; --finish-hi: #e3eef5; }
+.page[data-finish="slate"]    { --finish: #708090; --finish-hi: #a3afbb; }
+.page[data-finish="butter"]   { --finish: #f3df95; --finish-hi: #fff7d6; }
+
+/* ---------- Shared type ---------- */
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 1px 6px;
+  border: 1px dashed currentColor;
+  border-radius: 3px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  vertical-align: 1px;
+}
+
+.primaryBtn,
+.secondaryBtn,
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform var(--dur-fast, 0.2s) ease, background-color 0.2s ease;
+}
+
+.primaryBtn { background: var(--studio-ink); color: var(--studio-ivory); }
+.secondaryBtn { background: rgb(46 32 31 / 0.08); color: var(--studio-ink); }
+.pill { min-height: 36px; padding: 0 1rem; background: rgb(255 248 220 / 0.1); color: var(--on-dark); font-size: 0.8125rem; }
+
+.primaryBtn:hover,
+.secondaryBtn:hover,
+.pill:hover { transform: translateY(-1px); }
+
+.primaryBtn:focus-visible,
+.secondaryBtn:focus-visible,
+.pill:focus-visible,
+.projectLink:focus-visible,
+.dockBtn:focus-visible,
+.roundBtn:focus-visible,
+.unfoldHint:focus-visible,
+.swatch:focus-visible,
+.segmented button:focus-visible {
+  outline: 2px solid var(--studio-moss);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+ * Static flow (default)
+ * ======================================================================== */
+
+.stage {
+  padding: calc(var(--nav-h, 64px) + var(--space-6)) 0 var(--space-16);
+}
+
+/* The weight wrapper only exists for the scene; in the flow it is transparent. */
+.float { display: contents; }
+
+/* Unwrap the device so lock screen → sections → call screen read as one page. */
+.device {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+.shell,
+.body,
+.screen,
+.cover,
+.front { display: contents; }
+
+/* Scene-only parts (after the unwrap rule, which would otherwise win for .back). */
+.atmosphere,
+.seam,
+.name,
+.glow,
+.controls,
+.status,
+.crease,
+.dock,
+.back,
+.shade,
+.floor { display: none; }
+
+.lock { order: 1; }
+.content { order: 2; }
+.call { order: 3; }
+
+/* Phone-shaped cards for the lock and call screens */
+.lock,
+.call {
+  position: relative;
+  width: min(360px, calc(100% - 2 * var(--space-6)));
+  aspect-ratio: 9 / 17;
+  margin-inline: auto;
+  border-radius: var(--radius-device);
+  overflow: hidden;
+  container-type: inline-size;
+  box-shadow:
+    0 0 0 3px var(--finish),
+    0 0 0 4px rgb(0 0 0 / 0.08),
+    0 30px 60px -30px rgb(31 21 20 / 0.45);
+  border: 7px solid var(--glass);
+}
+
+.content {
+  container-type: inline-size;
+  width: min(1200px, calc(100% - 2 * var(--space-4)));
+  margin-inline: auto;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--ink-deep);
+}
+
+/* ==========================================================================
+ * Scene: the pinned device
+ * ======================================================================== */
+
+[data-mode="scene"] .stage {
+  position: relative;
+  height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+/* The seam: the hero's floor colour along the top edge, so the hero runs straight into this
+ * section with no visible line; it dissolves as the phone arrives. */
+[data-mode="scene"] .seam {
+  display: block;
+  position: absolute;
+  inset: 0 0 auto;
+  height: 70%;
+  z-index: 0;
+  background: linear-gradient(to bottom, var(--color-canvas-bottom) 0%, rgb(242 233 190 / 0.85) 35%, rgb(242 233 190 / 0) 100%);
+  pointer-events: none;
+}
+
+/* ---------- Atmosphere: the stage's own background, under every backdrop ----------
+ * Vanilla base; slowly drifting colour fields (Blue, Butter, Pearl, a Slate haze and a breath of
+ * Silent Ocean); two fine Slate rings framing the device; paper grain on top. */
+[data-mode="scene"] .atmosphere {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--studio-cream);
+}
+[data-mode="scene"] .atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--texture-grain);
+}
+
+/* Soft-edged fields drawn as radial gradients (no live blur filter, which is expensive to
+ * re-render while drifting); each field's colour comes from --c. */
+.atmosphere span {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--c) 0%, var(--c) 35%, transparent 100%);
+  will-change: transform;
+  animation: field 22s ease-in-out infinite alternate;
+}
+.atmosphere span:nth-child(1) { width: 58vmax; aspect-ratio: 1; left: -16vmax; top: -24vmax; --c: #c4dae8; }
+.atmosphere span:nth-child(2) { width: 50vmax; aspect-ratio: 1; right: -14vmax; top: -6vmax; --c: #feefb8; animation-delay: -6s; }
+.atmosphere span:nth-child(3) { width: 64vmax; aspect-ratio: 1; left: 22%; bottom: -44vmax; --c: #eae0c8; animation-delay: -11s; }
+.atmosphere span:nth-child(4) { width: 34vmax; aspect-ratio: 1; left: -10vmax; bottom: -14vmax; --c: #708090; opacity: 0.3; animation-delay: -3s; }
+.atmosphere span:nth-child(5) { width: 30vmax; aspect-ratio: 1; right: -6vmax; bottom: -16vmax; --c: #0f3c65; opacity: 0.16; animation-delay: -15s; }
+
+@keyframes field {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(4vmax, 3vmax, 0) scale(1.08); }
+}
+
+.atmosphere i {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgb(112 128 144 / 0.32);
+  translate: -50% -50%;
+}
+.atmosphere i:nth-of-type(1) { width: min(96vmin, 900px); }
+.atmosphere i:nth-of-type(2) { width: min(128vmin, 1200px); border-style: dashed; border-color: rgb(112 128 144 / 0.22); }
+
+/* ---------- Backdrops ---------- */
+[data-mode="scene"] .name,
+[data-mode="scene"] .glow {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+
+[data-mode="scene"] .name {
+  inset: auto 0;
+  top: 50%;
+  translate: 0 -46%;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-logo);
+  font-weight: 400;
+  /* Wide tracking spreads the letters so they flank the device and stay readable around it, while
+   * the whole word (≈ 3.4em) still sits inside the screen with margin. The left padding matches the
+   * trailing tracking, so the word stays optically centred. */
+  /* Sized for Vogue, which is wider than a condensed face. */
+  font-size: min(21vw, 34vh);
+  line-height: 0.8;
+  letter-spacing: 0.28em;
+  padding-left: 0.28em;
+  color: var(--palette-ocean);
+  white-space: nowrap;
+}
+
+.glow span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46vmax;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(60px) saturate(1.25);
+}
+.glow span:nth-child(1) { background: #a9c7dc; translate: -86% -60%; }
+.glow span:nth-child(2) { background: #8fa0b2; translate: -14% -42%; }
+.glow span:nth-child(3) { background: #f9dc7c; translate: -50% -10%; width: 36vmax; }
+
+/* Only the chosen backdrop shows. */
+.page:not([data-backdrop="basic"]) .name,
+.page:not([data-backdrop="glow"]) .glow,
+.page:not([data-backdrop="wheel"]) .wheel { opacity: 0; visibility: hidden; }
+/* The wheel layer fades like the other backdrops (its drums are laid out in QuestionWheel.module.css). */
+.wheel { transition: opacity 0.6s ease, visibility 0.6s; }
+
+/* ---------- Device ---------- */
+/* Carries the phone's momentum lag and tilt (FoldHome); the device inside keeps its own transforms. */
+[data-mode="scene"] .float {
+  display: block;
+  position: relative;
+}
+
+[data-mode="scene"] .device {
+  display: block;
+  position: relative;
+  width: var(--device-w);
+  height: var(--device-h);
+  margin-top: 2.5vh;
+  perspective: 2600px;
+}
+
+[data-mode="scene"] .floor {
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: -26px;
+  width: 50%;
+  height: 40px;
+  border-radius: 50%;
+  background: rgb(31 21 20 / 0.28);
+  filter: blur(22px);
+}
+
+/* Frame: metal rim (the finish), black glass, then the screen. */
+[data-mode="scene"] .shell {
+  display: block;
+  position: absolute;
+  border-radius: var(--radius-device);
+  background: linear-gradient(135deg, var(--finish-hi), var(--finish) 40%, var(--finish) 70%, var(--finish-hi));
+}
+[data-mode="scene"] .shell::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: calc(var(--radius-device) - 3px);
+  background: var(--glass);
+}
+
+[data-mode="scene"] .body {
+  inset: 0;
+  box-shadow: 0 50px 90px -40px rgb(31 21 20 / 0.55);
+}
+
+/* Side buttons on the right edge */
+[data-mode="scene"] .body::after,
+[data-mode="scene"] .front::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 17%;
+  width: 4px;
+  height: 9%;
+  border-radius: 0 3px 3px 0;
+  background: var(--finish);
+  box-shadow: 0 calc(var(--device-h) * 0.13) 0 var(--finish);
+}
+
+[data-mode="scene"] .screen {
+  display: block;
+  position: absolute;
+  inset: var(--bezel);
+  border-radius: calc(var(--radius-device) - var(--bezel));
+  overflow: hidden;
+  background: var(--glass);
+  isolation: isolate;
+}
+
+/* The screen's content is one tall column; the fold timeline moves it with translateY, 1:1
+ * with page scroll. Nothing inside the device scrolls on its own. */
+[data-mode="scene"] .content {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  /* Room for the dock at the end of the content. */
+  padding-bottom: 96px;
+  background: var(--ink-deep);
+  will-change: transform;
+}
+
+/* Status bar: inverts against whatever scrolls beneath it. */
+[data-mode="scene"] .status {
+  display: flex;
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  justify-content: space-between;
+  align-items: center;
+  height: 34px;
+  padding: 0 22px;
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+.statusRight { display: inline-flex; align-items: center; gap: 6px; }
+.battery {
+  width: 20px;
+  height: 9px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  background: linear-gradient(90deg, currentColor 70%, transparent 70%) content-box;
+  padding: 1px;
+}
+
+[data-mode="scene"] .crease {
+  display: block;
+  position: absolute;
+  inset: 0 auto 0 50%;
+  z-index: 2;
+  width: 14px;
+  translate: -50% 0;
+  background: linear-gradient(90deg, transparent, rgb(0 0 0 / 0.07) 45%, rgb(255 255 255 / 0.08) 55%, transparent);
+  pointer-events: none;
+}
+
+[data-mode="scene"] .dock {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 4;
+  translate: -50% 0;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgb(31 21 20 / 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.5);
+}
+
+.dockBtn {
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  color: var(--on-dark-muted);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.dockBtn:hover { color: var(--on-dark); }
+.dockBtn[aria-current="true"] { background: var(--studio-ivory); color: var(--studio-ink); }
+
+/* ---------- The hinged page ---------- */
+[data-mode="scene"] .cover {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  z-index: 5;
+  transform-style: preserve-3d;
+  transform-origin: 0% 50%;
+}
+
+[data-mode="scene"] .front,
+[data-mode="scene"] .back {
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+[data-mode="scene"] .front { box-shadow: 0 40px 80px -36px rgb(31 21 20 / 0.55); }
+
+/* The back face is the left half of the open device: rounded only on its outer (left) side. */
+[data-mode="scene"] .back {
+  display: block;
+  /* 1px past the hinge, so no hairline of background shows between the halves */
+  inset: 0 0 0 -1px;
+  transform: rotateY(180deg);
+  border-radius: var(--radius-device) 0 0 var(--radius-device);
+}
+[data-mode="scene"] .back::before {
+  inset: 3px 0 3px 3px;
+  border-radius: calc(var(--radius-device) - 3px) 0 0 calc(var(--radius-device) - 3px);
+}
+[data-mode="scene"] .backScreen {
+  inset: var(--bezel) 0 var(--bezel) var(--bezel);
+  border-radius: calc(var(--radius-device) - var(--bezel)) 0 0 calc(var(--radius-device) - var(--bezel));
+}
+
+/* A copy of the opening screen at full screen width; the face shows its left half. */
+.backCopy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--device-w) - 2 * var(--bezel));
+  height: 100%;
+  container-type: inline-size;
+}
+.backBlank { position: absolute; inset: 0; background: var(--glass); }
+
+[data-mode="scene"] .shade {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgb(31 21 20 / 0.9), rgb(31 21 20 / 0.5));
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Phone-sized outer screen: lock and call layers fill it. */
+[data-mode="scene"] .phoneScreen { container-type: inline-size; }
+[data-mode="scene"] .lock,
+[data-mode="scene"] .call {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  aspect-ratio: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ---------- Controls under the device ---------- */
+[data-mode="scene"] .controls {
+  display: block;
+  position: absolute;
+  inset: auto 0 14px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.swatches {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: max-content;
+  margin-inline: auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgb(255 248 220 / 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px -10px rgb(31 21 20 / 0.4);
+  pointer-events: auto;
+}
+
+.swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--finish-hi), var(--finish));
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  transition: transform 0.2s ease;
+}
+.swatch[data-finish="chocopie"] { --finish: #432f2e; --finish-hi: #6e5452; }
+.swatch[data-finish="ocean"]    { --finish: #0f3c65; --finish-hi: #3a6590; }
+.swatch[data-finish="blue"]     { --finish: #c4dae8; --finish-hi: #e3eef5; }
+.swatch[data-finish="slate"]    { --finish: #708090; --finish-hi: #a3afbb; }
+.swatch[data-finish="butter"]   { --finish: #f3df95; --finish-hi: #fff7d6; }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--studio-ivory), 0 0 0 3.5px var(--studio-ink); }
+.swatch:hover { transform: scale(1.12); }
+
+.segmented {
+  position: absolute;
+  left: 24px;
+  bottom: 0;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgb(255 248 220 / 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px -10px rgb(31 21 20 / 0.4);
+  pointer-events: auto;
+}
+.segmented button {
+  min-height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--studio-ink-muted);
+}
+.segmented button[aria-pressed="true"] { background: var(--studio-ink); color: var(--studio-ivory); }
+
+/* ==========================================================================
+ * Lock screen (outer screen, folded)
+ * ======================================================================== */
+.lock {
+  background:
+    radial-gradient(90% 60% at 50% 100%, rgb(255 255 255 / 0.5), transparent 70%),
+    linear-gradient(180deg, var(--studio-botanical) 0%, var(--studio-sage) 100%);
+  color: var(--studio-ink);
+}
+
+/* Depth wallpaper: photo, clock, cut-out. Both images share one box, object-fit and position, so
+ * the cut-out lands exactly on her in the photo and the clock reads as sitting behind her. */
+.wallpaper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transform-origin: 50% 40%;
+}
+.wallpaperPhoto,
+.wallpaperSubject {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 16%;
+  user-select: none;
+}
+/* A soft lift at the top so the role line and clock stay legible on the wall. */
+.wallpaperPhoto + .clock::before {
+  content: "";
+  position: absolute;
+  inset: -40% 0 -30%;
+  z-index: -1;
+  background: radial-gradient(60% 55% at 50% 50%, rgb(250 246 238 / 0.45), transparent 75%);
+  pointer-events: none;
+}
+
+.lockTop {
+  position: absolute;
+  inset: 5.5% 0 auto;
+  z-index: 1;
+  text-align: center;
+}
+
+.clock {
+  position: absolute;
+  inset: 9% 0 auto;
+  isolation: isolate;
+  text-align: center;
+  color: var(--studio-ink);
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(4rem, 30cqi, 9rem);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+}
+
+.lockRole {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+}
+
+.notes {
+  position: absolute;
+  inset: auto 5% 17%;
+  display: grid;
+  gap: 8px;
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgb(255 248 220 / 0.62);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 8px 24px -16px rgb(31 21 20 / 0.5);
+}
+
+.noteTile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.noteTile[data-tone="blush"] { background: var(--studio-moss); color: var(--studio-cream); }
+.noteTile[data-tone="sage"] { background: var(--studio-sage); color: var(--studio-ink); }
+
+.noteTitle { display: block; font-size: 0.8125rem; font-weight: var(--weight-medium); line-height: 1.25; }
+.noteMeta {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--studio-ink-muted);
+}
+
+.lockBar {
+  position: absolute;
+  inset: auto 5% 4.5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.roundBtn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgb(255 248 220 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--studio-ink);
+  text-decoration: none;
+}
+
+.unfoldHint {
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgb(255 248 220 / 0.85);
+  font-size: 0.75rem;
+  font-weight: var(--weight-medium);
+  color: var(--studio-ink);
+  animation: nudge 2.4s ease-in-out infinite;
+}
+@keyframes nudge {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-3px); }
+}
+
+/* ==========================================================================
+ * Call screen (folded again)
+ * ======================================================================== */
+.call {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14% 7% 7%;
+  background:
+    radial-gradient(80% 50% at 50% 0%, rgb(196 218 232 / 0.18), transparent 70%),
+    var(--ink-deep);
+  color: var(--on-dark);
+  text-align: center;
+}
+
+.callName {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 17cqi, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+}
+
+.callStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  order: -1;
+  margin-bottom: 0.9rem;
+  font-size: 0.8125rem;
+  color: var(--on-dark-muted);
+}
+.callPulse { width: 8px; height: 8px; border-radius: 50%; background: #8fd19e; box-shadow: 0 0 0 0 rgb(143 209 158 / 0.6); animation: pulse 1.8s ease-out infinite; }
+@keyframes pulse { to { box-shadow: 0 0 0 10px rgb(143 209 158 / 0); } }
+
+.callLine { max-width: 26ch; margin-top: 0.75rem; font-size: 0.875rem; line-height: 1.45; color: var(--on-dark-muted); }
+
+.callAvatar {
+  width: 36cqi;
+  max-width: 150px;
+  height: auto;
+  aspect-ratio: 1;
+  margin-top: 8%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  box-shadow: 0 0 0 3px var(--studio-ivory), 0 0 0 12px rgb(196 218 232 / 0.14);
+  animation: ring 2.4s ease-out infinite;
+}
+@keyframes ring {
+  0% { box-shadow: 0 0 0 3px var(--studio-ivory), 0 0 0 3px rgb(196 218 232 / 0.3); }
+  100% { box-shadow: 0 0 0 3px var(--studio-ivory), 0 0 0 22px rgb(196 218 232 / 0); }
+}
+
+/* Two clear actions instead of a mock "slide to answer": email, or copy the address. */
+.callActions { display: grid; gap: 0.5rem; width: 100%; margin-top: auto; }
+.callPrimary,
+.callSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  min-height: 48px;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.callPrimary { background: #feefb8; color: #2e201f; }
+.callPrimary:hover { background: #fff7d6; }
+.callSecondary { background: transparent; color: var(--on-dark); box-shadow: inset 0 0 0 1px rgb(255 248 220 / 0.3); }
+.callSecondary:hover { background: rgb(255 248 220 / 0.08); }
+.callPrimary:focus-visible,
+.callSecondary:focus-visible { outline: 2px solid #feefb8; outline-offset: 3px; }
+
+.callEmail {
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  color: var(--on-dark-muted);
+}
+
+/* ==========================================================================
+ * Inner screen sections
+ * ======================================================================== */
+
+/* ---------- Home: text left, portrait right ---------- */
+.home {
+  display: grid;
+  background: var(--studio-ivory);
+  color: var(--studio-ink);
+}
+
+.homeText {
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.5rem 2rem;
+}
+
+.homeName {
+  margin-top: 1.5rem;
+  font-family: var(--font-logo);
+  font-weight: 400;
+  font-size: clamp(4rem, 14cqi, 10.5rem);
+  line-height: 0.86;
+  letter-spacing: 0.02em;
+}
+
+.homeIntro {
+  max-width: 34ch;
+  margin-top: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
+
+.homePortrait { min-height: 0; aspect-ratio: 4 / 5; overflow: hidden; background: var(--studio-sage); }
+.homePortrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+
+/* Scene (and the back-face copy): one full screen, split down the hinge. */
+[data-mode="scene"] .home {
+  grid-template-columns: 1fr 1fr;
+  height: var(--screen-h);
+}
+[data-mode="scene"] .homeText {
+  justify-content: flex-end;
+  padding: 0 4cqi 11cqi;
+}
+[data-mode="scene"] .homeText .eyebrow { margin-bottom: auto; padding-top: 64px; }
+[data-mode="scene"] .homePortrait { aspect-ratio: auto; }
+
+/* ---------- Dark sections ---------- */
+.stats,
+.work,
+.services,
+.ctaWrap { background: var(--ink-deep); color: var(--on-dark); }
+
+.stats { padding: 2.5rem 1.5rem; background: var(--palette-ocean); }
+.stats ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem 1rem;
+  margin-block: 1.5rem;
+}
+.stats li { display: grid; gap: 6px; align-content: start; }
+.statValue {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(3rem, 8cqi, 6rem);
+  line-height: 0.85;
+}
+.statLabel {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.statSource { font-family: var(--font-ui); font-size: 0.6875rem; letter-spacing: 0.06em; color: var(--on-dark-muted); }
+
+/* ---------- Selected work ---------- */
+.workHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 1.5rem 1.5rem;
+}
+.workTitle {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(3.25rem, 11cqi, 9rem);
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.projects,
+.serviceList { margin: 0; padding: 0; list-style: none; }
+
+.projects { display: grid; }
+
+.project { display: grid; }
+
+.projectImage { aspect-ratio: 4 / 3; overflow: hidden; background: var(--studio-botanical); }
+.projectImage > * { width: 100%; height: 100%; }
+
+.projectPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  min-height: 16rem;
+  background: var(--panel);
+  color: var(--panel-ink);
+}
+.projectPanel[data-tone="sage"]      { --panel: var(--studio-sage);      --panel-ink: var(--studio-ink); }
+.projectPanel[data-tone="blush"]     { --panel: var(--studio-blush);     --panel-ink: var(--studio-ink); }
+.projectPanel[data-tone="botanical"] { --panel: var(--studio-botanical); --panel-ink: var(--studio-ink); }
+.projectPanel[data-tone="olive"]     { --panel: var(--studio-olive);     --panel-ink: var(--studio-ivory); }
+.projectPanel[data-tone="cream"]     { --panel: var(--studio-pearl);     --panel-ink: var(--studio-ink); }
+.projectPanel[data-tone="moss"]      { --panel: var(--studio-moss);                 --panel-ink: var(--studio-ivory); }
+
+.projectNumber {
+  /* In flow and pushed to the top, so long descriptions can never run underneath it. */
+  margin-bottom: auto;
+  padding-bottom: 1rem;
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(5.5rem, 17cqi, 13rem);
+  line-height: 0.78;
+}
+
+.projectCategory {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.projectTitle {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 5.5cqi, 4.25rem);
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.projectLine { max-width: 42ch; font-size: 0.875rem; line-height: 1.5; }
+
+.projectLink {
+  margin-top: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+}
+.projectLink:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+[data-mode="scene"] .project {
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(var(--screen-h) * 0.82);
+}
+[data-mode="scene"] .projectImage { aspect-ratio: auto; }
+[data-mode="scene"] .projectPanel { padding: 3cqi 3.5cqi 4cqi; }
+
+/* ---------- What I do: four service groups, then tools (a separate group) ---------- */
+.services { padding: 3rem 1.25rem 1.5rem; }
+.servicesHead { display: grid; gap: 0.5rem; margin-bottom: 1.75rem; }
+.servicesTitle {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(3rem, 9cqi, 7.5rem);
+  line-height: 0.84;
+  text-transform: uppercase;
+}
+
+.serviceList {
+  display: grid;
+  gap: 1px;
+  margin-block: 0 1.75rem;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgb(255 248 220 / 0.14); /* the 1px gaps read as hairlines between groups */
+}
+
+.service {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: 1.5rem 1.4rem 1.75rem;
+  background: var(--ink-deep);
+}
+.serviceNum { font-family: var(--font-ui); font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--on-dark-muted); }
+.serviceTitle {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 3.2cqi, 2.6rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.serviceLine { max-width: 44ch; font-size: 0.9375rem; line-height: 1.6; color: var(--on-dark-muted); }
+
+/* ---------- Technical skills: the toolkit panel ----------
+ * A soft panel: a small label, the title and a count; the two groups side by side under a hairline,
+ * each a number and a name, then its tools. Every logo stands on its own (no tile) with a soft glow in
+ * its brand colour. No paragraphs. */
+.tools {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgb(254 239 184 / 0.07), transparent 60%),
+    rgb(255 248 220 / 0.045);
+  box-shadow: inset 0 0 0 1px rgb(255 248 220 / 0.12), 0 24px 48px -32px rgb(0 0 0 / 0.5);
+}
+.toolsHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgb(255 248 220 / 0.12);
+}
+.toolsKicker { font-family: var(--font-ui); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--on-dark-muted); }
+.toolsTitle { margin-top: 0.4rem; font-family: var(--font-condensed);
+  text-transform: uppercase; font-size: clamp(2.08rem, 3.9cqi, 3.12rem); font-weight: 800; line-height: 0.92; }
+.toolsCount {
+  flex: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgb(255 248 220 / 0.2);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-dark-muted);
+}
+.toolGroups { display: grid; gap: 1.75rem; }
+.toolGroupTitle { display: flex; align-items: baseline; gap: 0.75rem; font-family: var(--font-condensed);
+  text-transform: uppercase; font-weight: 800; font-size: 1.63rem; line-height: 0.92; }
+.toolGroupNum { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; color: #c4dae8; }
+.toolList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 1.25rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tool { display: flex; align-items: center; gap: 0.85rem; padding: 0.35rem 0; min-width: 0; }
+/* One width for every mark (room for two logos), so all tool names line up. */
+.toolMark { flex: none; display: flex; align-items: center; gap: 6px; width: 62px; height: 32px; }
+.toolMark img {
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 4px color-mix(in srgb, var(--glow) 70%, transparent))
+    drop-shadow(0 0 12px color-mix(in srgb, var(--glow) 45%, transparent));
+  transition: filter 0.35s cubic-bezier(0.22, 0.7, 0.25, 1), transform 0.35s cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+.toolMark[data-count="2"] img { width: 25px; height: 25px; }
+.tool:hover .toolMark img {
+  transform: translateY(-1px);
+  filter:
+    drop-shadow(0 0 6px color-mix(in srgb, var(--glow) 85%, transparent))
+    drop-shadow(0 0 18px color-mix(in srgb, var(--glow) 60%, transparent));
+}
+.toolName { font-size: 0.875rem; line-height: 1.3; color: var(--on-dark); }
+/* Phones: one tool per row, so longer names never crowd. */
+@container (max-width: 520px) { .toolList { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Find me on: link cards ----------
+ * Whole card is the link: an icon and an arrow on top, the name, then the handle. Restrained hover
+ * (a light fill and a nudge), a clear focus ring. */
+.elsewhereHead { display: flex; align-items: center; gap: 1rem; }
+.elsewhereRule { flex: 1; height: 1px; background: rgb(255 248 220 / 0.14); }
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.linkCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 132px;
+  padding: 1rem 1.1rem 1.1rem;
+  border-radius: 16px;
+  background: rgb(255 248 220 / 0.05);
+  box-shadow: inset 0 0 0 1px rgb(255 248 220 / 0.12);
+  color: var(--on-dark);
+  text-decoration: none;
+  transition: background-color 0.3s cubic-bezier(0.22, 0.7, 0.25, 1), color 0.3s ease, transform 0.3s cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+.linkTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: auto; }
+.linkIcon { display: block; color: #c4dae8; transition: color 0.3s ease; }
+.linkArrow { font-size: 1rem; color: var(--on-dark-muted); transition: transform 0.35s cubic-bezier(0.22, 0.7, 0.25, 1), color 0.3s ease; }
+.linkName { margin-top: 1.4rem; font-family: var(--font-condensed);
+  text-transform: uppercase; font-weight: 800; font-size: 1.63rem; line-height: 0.92; }
+.linkMeta { margin-top: 0.3rem; font-size: 0.8125rem; color: var(--on-dark-muted); overflow-wrap: anywhere; transition: color 0.3s ease; }
+.linkCard:hover { background: #feefb8; color: #2e201f; transform: translateY(-2px); }
+.linkCard:hover .linkIcon { color: #0f3c65; }
+.linkCard:hover .linkMeta,
+.linkCard:hover .linkArrow { color: rgb(46 32 31 / 0.7); }
+.linkCard:hover .linkArrow { transform: translate(2px, -2px); }
+.linkCard:focus-visible { outline: 2px solid #feefb8; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .linkCard,
+  .linkArrow { transition: none; }
+  .linkCard:hover { transform: none; }
+  .linkCard:hover .linkArrow { transform: none; }
+}
+@container (min-width: 760px) {
+  .links { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  /* Same grid as the work above: text at 4cqi, the second column on the centre line. */
+  .stats { padding-inline: 4cqi; }
+  .services { padding: 5cqi 4cqi 2cqi; }
+  .servicesHead { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; column-gap: 0; }
+  .servicesHead .eyebrow { order: 2; padding-bottom: 0.6rem; }
+  /* Full-width panels extend 2cqi past the text edge so their text sits on the grid. */
+  .tools { margin-inline: -2cqi; padding: 2rem 2cqi 2.25rem; }
+  .serviceList { grid-template-columns: 1fr 1fr; }
+  .service { padding: 2.25rem 2rem 2.5rem; min-height: 15cqi; }
+  .toolGroups { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 0; row-gap: 1.75rem; }
+  .toolGroup:first-child { padding-right: 2.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .linkCard,
+  .linkArrow { transition: none; }
+  .linkCard:hover { transform: none; }
+  .linkCard:hover .linkArrow { transform: none; }
+}
+
+/* ---------- Closing card ---------- */
+.ctaWrap { padding: 2rem 1rem 2.5rem; }
+[data-mode="scene"] .ctaWrap { padding: 2rem 3cqi 0; }
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 2rem 1.75rem;
+  border-radius: 22px;
+  background: var(--studio-ivory);
+  color: var(--studio-ink);
+}
+.ctaTitle {
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 5cqi, 4rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.ctaPending { font-family: var(--font-ui); font-size: 0.75rem; }
+
+/* ---------- Wider static layouts (tablets, reduced motion on desktop) ---------- */
+@container (min-width: 720px) {
+  .home { grid-template-columns: 1fr 1fr; }
+  .homeText { justify-content: flex-end; padding: 3rem 4cqi; }
+  .homePortrait { aspect-ratio: auto; min-height: 520px; }
+  .stats ul { grid-template-columns: repeat(4, 1fr); }
+  .project { grid-template-columns: 1fr 1fr; }
+  .projectImage { aspect-ratio: auto; min-height: 360px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .unfoldHint,
+  .callAvatar,
+  .callPulse,
+  .atmosphere span { animation: none; }
+}
+
+/* ==========================================================================
+ * Falling entrances (Section 2), after the reference site: each block falls into place the first
+ * time it comes into view, on a fast spring-like settle, staggered. FoldHome's observer adds
+ * [data-in]; nothing is hidden until it marks the page ready ([data-drops]), so without JS or with
+ * reduced motion everything simply shows. Variants (the value of data-drop):
+ *   (empty)  paragraphs: 40px lower with a 3° skew
+ *   label    small labels: 20px in from the left
+ *   row      buttons, chip rows: 96% scale, 32px lower
+ *   panel    cards and panels: 96% scale, 48px lower
+ *   screen   the lock / call cards in the static flow (in the scene GSAP owns them)
+ *   letters  headings: the container stays put, its letters fall (FallText.module.css)
+ * ======================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .page[data-drops] [data-drop] {
+    --drop-from: translate3d(0, 40px, 0) skewY(3deg);
+    opacity: 0;
+    transform: var(--drop-from);
+    transform-origin: 0 0;
+    transition:
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--drop-delay, 0ms),
+      opacity 0.6s cubic-bezier(0.22, 0.7, 0.25, 1) var(--drop-delay, 0ms);
+  }
+  .page[data-drops] [data-drop="label"] { --drop-from: translate3d(-20px, 0, 0); }
+  .page[data-drops] [data-drop="row"] { --drop-from: translate3d(0, 32px, 0) scale(0.96); transform-origin: 50% 100%; }
+  .page[data-drops] [data-drop="panel"],
+  .page[data-drops] [data-drop="screen"] { --drop-from: translate3d(0, 48px, 0) scale(0.96); transform-origin: 50% 100%; }
+  .page[data-drops] [data-drop="letters"] { opacity: 1; transform: none; transition: none; }
+  .page[data-drops][data-mode="scene"] [data-drop="screen"] { opacity: 1; transform: none; transition: none; }
+  .page[data-drops] [data-drop][data-in] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The closing card follows the same grid (after its base rules, so this wins): the panel extends 2cqi
+ * past the text edge and its text sits at 4cqi. */
+@container (min-width: 760px) {
+  .ctaWrap,
+  [data-mode="scene"] .ctaWrap { padding-inline: 2cqi; }
+  .cta { padding-inline: 2cqi; }
+}

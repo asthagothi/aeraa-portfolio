@@ -1,0 +1,171 @@
+/* Home — Contact. A dark panel ruled into columns by hairlines (the lines sit between columns, so
+ * they never cross text), the email set large, link columns, and the name as a closing block. */
+
+.contact {
+  --bg: #2e201f;          /* deep Chocopie */
+  --text: #feefb8;        /* Butter */
+  --muted: rgb(254 239 184 / 0.72);
+  --accent: #c4dae8;      /* Blue */
+  --line: rgb(254 239 184 / 0.14);
+  /* The section is the container the frame's column layout queries (a container can't query
+   * itself); the frame is the container for everything inside it. */
+  container-type: inline-size;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0 clamp(1rem, 4vw, 3.5rem);
+  overflow: hidden;
+}
+
+.frame {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1400px;
+  margin: 0 auto;
+  border-inline: 1px solid var(--line);
+  /* The frame is the size container: the columns and the name follow its width (max 1400px),
+   * not the full section, so on very wide screens the name still fits inside it. */
+  container-type: inline-size;
+}
+
+/* Every block has its own padding inside the ruled frame. */
+.intro,
+.lead,
+.col,
+.bar { padding: 1.75rem 1.25rem; }
+
+.intro { border-bottom: 1px solid var(--line); padding-top: calc(var(--nav-h, 64px) + 1.5rem); }
+.label {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.blurb { margin-top: 0.9rem; max-width: 34ch; font-size: 0.9375rem; line-height: 1.55; color: var(--muted); }
+
+.lead { border-bottom: 1px solid var(--line); }
+.heading {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: clamp(2.27rem, 4.94cqi, 3.9rem);
+  line-height: 0.92;
+  color: var(--accent);
+  text-wrap: balance;
+}
+.sub { max-width: 52ch; margin-top: 0.85rem; font-size: 1rem; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+
+.email {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-ui);
+  font-weight: var(--weight-medium);
+  font-size: clamp(1.6rem, 6.4cqi, 5.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.email:hover { color: var(--accent); border-color: var(--accent); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0 1.15rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.primary { background: var(--accent); color: var(--bg); }
+.primary:hover { background: var(--text); }
+.secondary { box-shadow: inset 0 0 0 1px rgb(254 239 184 / 0.35); color: var(--text); }
+.secondary:hover { background: rgb(254 239 184 / 0.08); }
+.pending { margin-top: 0.75rem; font-family: var(--font-ui); }
+
+.col { border-bottom: 1px solid var(--line); }
+/* Column titles in the text face, sentence case: calmer than spaced capitals. */
+.colTitle {
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+  color: var(--muted);
+}
+.list { display: grid; gap: 0.65rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+.plain { font-size: 0.9375rem; line-height: 1.35; }
+.link {
+  font-size: 0.9375rem;
+  color: var(--text);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease, color 0.2s ease;
+}
+.link:hover { color: var(--accent); background-size: 100% 1px; }
+.handle { font-family: var(--font-ui); font-size: 0.6875rem; letter-spacing: 0.06em; color: var(--muted); }
+
+.email:focus-visible,
+.primary:focus-visible,
+.secondary:focus-visible,
+.link:focus-visible,
+.barLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* The name: sized to the frame's width (container units) so it always fits inside it. */
+.bigName {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 2.5rem 0.5rem 0.5rem;
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  font-size: 20cqi;
+  line-height: 0.8;
+  letter-spacing: -0.005em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* The closing signature: Blue, slightly recessed so it reads as a sign-off, not a headline. */
+  color: var(--accent);
+  opacity: 0.85;
+  user-select: none;
+}
+
+.bar {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.barLink { color: var(--muted); text-decoration: none; }
+.barLink:hover { color: var(--text); }
+
+/* ---------- Wider: the ruled 4-column grid ---------- */
+@container (min-width: 760px) {
+  .frame { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .intro,
+  .lead,
+  .col { padding: 2.5rem 1.75rem; }
+  .intro { grid-column: 1; border-right: 1px solid var(--line); padding-top: calc(var(--nav-h, 64px) + 3rem); }
+  .lead { grid-column: 2 / -1; padding-top: calc(var(--nav-h, 64px) + 3rem); padding-bottom: 4rem; }
+  /* Index | What I do (two columns wide) | Elsewhere */
+  .col { border-right: 1px solid var(--line); }
+  .colDo { grid-column: span 2; }
+  .colElse { border-right: 0; }
+}

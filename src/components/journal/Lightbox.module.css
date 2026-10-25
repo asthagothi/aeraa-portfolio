@@ -1,0 +1,64 @@
+.dialog {
+  width: min(92vw, 70rem);
+  max-height: 92svh;
+  margin: auto;
+  padding: var(--space-4);
+  border: 0;
+  background: #fff8dc;
+  color: #2e201f;
+  box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.5);
+}
+
+.dialog::backdrop {
+  background: rgb(46 32 31 / 0.72);
+}
+
+.figure {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+}
+
+.figure img {
+  max-width: 100%;
+  max-height: calc(92svh - 9rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.caption {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+  width: 100%;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+.count {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: #6b5250;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.controls button {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  font-size: 0.75rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgb(46 32 31 / 0.2);
+}
+
+.controls button:hover { background: #e1edf4; }

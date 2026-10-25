@@ -1,0 +1,68 @@
+.gallery {
+  background: linear-gradient(to bottom, var(--color-canvas), var(--color-canvas-bottom));
+  padding: var(--space-16) var(--gutter) var(--space-24);
+  overflow: clip;
+}
+
+.head {
+  max-width: 64rem;
+  margin: 0 auto var(--space-12);
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-strong);
+}
+
+.heading {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: clamp(2.25rem, 1rem + 4.5vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--color-text-strong);
+}
+
+.note {
+  margin-top: var(--space-3);
+  font-size: var(--text-ui-sm);
+  color: var(--color-text-body);
+}
+
+/* Large screens: four independent columns (each can drift). */
+.grid {
+  max-width: 72rem;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.column {
+  display: grid;
+  gap: var(--space-8);
+}
+
+/* Offset alternate columns so the board starts staggered. */
+.column:nth-child(2) { margin-top: var(--space-16); }
+.column:nth-child(4) { margin-top: var(--space-8); }
+
+/* Below 1024px: one multi-column flow (columns dissolve via display: contents). */
+@media (max-width: 1023px) {
+  .grid { display: block; columns: 3; column-gap: var(--space-4); }
+  .column { display: contents; }
+  .column li { break-inside: avoid; margin-bottom: var(--space-6); }
+}
+
+@media (max-width: 767px) {
+  .gallery { padding-block: var(--space-10) var(--space-16); }
+  .head { margin-bottom: var(--space-8); }
+  .grid { columns: 2; column-gap: var(--space-3); }
+  .column li { margin-bottom: var(--space-4); }
+}

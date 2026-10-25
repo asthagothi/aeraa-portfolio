@@ -1,0 +1,86 @@
+/* Continues the Page 1 wall: same canvas, white display type, floating objects. */
+.scene {
+  position: relative;
+  background: linear-gradient(to bottom, var(--color-canvas-bottom), var(--color-canvas) 22%, var(--color-canvas) 100%);
+}
+
+/* ---------- Static layout (default: reduced motion, phones, no JS) ---------- */
+
+.stage {
+  position: relative;
+  padding: var(--space-16) var(--gutter) var(--space-12);
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.headline {
+  text-align: center;
+  margin-bottom: var(--space-10);
+}
+
+.eyebrow {
+  font-size: clamp(1.1rem, 0.6rem + 2.2vw, 2.6rem);
+  margin-bottom: 0.2em;
+  text-transform: none;
+}
+
+.title {
+  font-size: clamp(3rem, 1rem + 9vw, 10rem);
+}
+
+.board {
+  columns: 3 12rem;
+  column-gap: var(--space-4);
+}
+
+.slot {
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 767px) {
+  .board { columns: 2; column-gap: var(--space-3); }
+  .slot { margin-bottom: var(--space-3); }
+}
+
+/* ---------- Animated layout (opted into from JS on large screens) ---------- */
+
+.scene[data-animated] .stage {
+  height: 100svh;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+  perspective: 1400px;
+}
+
+.scene[data-animated] .headline {
+  position: absolute;
+  inset: 7svh 0 auto;
+  margin: 0;
+  pointer-events: none;
+}
+
+.scene[data-animated] .title {
+  font-size: clamp(4rem, 1rem + 8.4vw, 10.5rem);
+}
+
+.scene[data-animated] .board {
+  position: absolute;
+  inset: 0;
+  columns: auto;
+}
+
+.scene[data-animated] .slot {
+  --pin-w: clamp(120px, 12.5vw, 210px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--pin-w);
+  margin: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.scene[data-animated] .portraitSlot {
+  width: calc(var(--pin-w) * 1.3);
+}

@@ -1,0 +1,179 @@
+/* Tone map — every collage tone resolves to a studio token. */
+:is(.placeholder, .shape, .ui i)[data-tone="sage"]      { --tone: var(--studio-sage); --tone-ink: var(--studio-moss); }
+:is(.placeholder, .shape, .ui i)[data-tone="botanical"] { --tone: var(--studio-botanical); --tone-ink: var(--studio-moss); }
+:is(.placeholder, .shape, .ui i)[data-tone="olive"]     { --tone: var(--studio-olive); --tone-ink: var(--studio-ivory); }
+:is(.placeholder, .shape, .ui i)[data-tone="moss"]      { --tone: var(--studio-moss); --tone-ink: var(--studio-ivory); }
+:is(.placeholder, .shape, .ui i)[data-tone="cream"]     { --tone: #f3e3b0; --tone-ink: var(--studio-ink); }
+:is(.placeholder, .shape, .ui i)[data-tone="ivory"]     { --tone: var(--studio-ivory); --tone-ink: var(--studio-ink); }
+:is(.placeholder, .shape, .ui i)[data-tone="blush"]     { --tone: var(--studio-blush); --tone-ink: var(--studio-ink); }
+:is(.placeholder, .shape, .ui i)[data-tone="ink"]       { --tone: var(--studio-ink); --tone-ink: var(--studio-ivory); }
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder artwork: a quiet tonal field with a grain of texture, clearly labelled. */
+.placeholder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 90% at 25% 15%, rgb(255 255 255 / 0.22), transparent 60%),
+    var(--tone);
+  color: var(--tone-ink);
+  overflow: hidden;
+}
+
+.placeholderLabel {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  right: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  opacity: 0.85;
+}
+
+.glyph { display: block; opacity: 0.8; }
+
+.glyph[data-glyph="play"] {
+  width: 0;
+  height: 0;
+  border-left: 18px solid currentColor;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  margin-left: 6px;
+}
+
+.glyph[data-glyph="type"]::before {
+  content: 'Aa';
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-size: clamp(3.25rem, 7.8cqi, 7.8rem);
+  font-weight: 800;
+  line-height: 0.92;
+}
+
+.glyph[data-glyph="grid"] {
+  width: 46%;
+  aspect-ratio: 1;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 46% 46% no-repeat,
+    linear-gradient(currentColor 0 0) 100% 0 / 46% 46% no-repeat,
+    linear-gradient(currentColor 0 0) 0 100% / 46% 46% no-repeat;
+  opacity: 0.25;
+}
+
+.glyph[data-glyph="window"] {
+  width: 70%;
+  aspect-ratio: 4 / 3;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  background: linear-gradient(currentColor 0 0) 0 0 / 100% 14% no-repeat;
+  opacity: 0.35;
+}
+
+/* Abstract shapes */
+.shape {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--tone);
+}
+
+.shape[data-shape="circle"] { border-radius: 50%; }
+.shape[data-shape="arch"] { border-radius: 999px 999px 0 0; }
+.shape[data-shape="pill"] { border-radius: 999px; }
+.shape[data-shape="leaf"] { border-radius: 0 100% 0 100%; }
+.shape[data-shape="ring"] { border-radius: 50%; background: transparent; border: 2px solid var(--tone); }
+
+/* Typographic fragments */
+.type {
+  display: block;
+  white-space: nowrap;
+  color: var(--studio-ink);
+}
+
+.type[data-style="serif"] {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 5.46cqi, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.type[data-style="italic"] {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: clamp(1.3rem, 2.08cqi, 2.27rem);
+  line-height: 0.92;
+}
+
+.type[data-style="label"] {
+  font-family: var(--font-ui);
+  font-size: var(--studio-label-size);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--studio-label-tracking);
+  text-transform: uppercase;
+  color: var(--studio-ink-muted);
+}
+
+/* Interface fragments */
+.ui { display: block; width: 100%; height: 100%; }
+
+.ui[data-part="window"] {
+  display: flex;
+  gap: 4px;
+  padding: 7px 8px;
+  background: var(--studio-ivory);
+  border: 1px solid var(--studio-line);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px -16px rgb(46 32 31 / 0.4);
+}
+
+.ui[data-part="window"] i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--studio-sage);
+}
+
+.ui[data-part="button"] {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--studio-moss);
+}
+
+.ui[data-part="button"]::after {
+  content: '';
+  width: 40%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--studio-ivory);
+  opacity: 0.8;
+}
+
+.ui[data-part="swatches"] {
+  display: flex;
+  gap: 6%;
+  align-items: center;
+}
+
+.ui[data-part="swatches"] i {
+  flex: 1;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tone);
+  border: 1px solid var(--studio-line);
+}

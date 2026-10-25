@@ -1,0 +1,116 @@
+/* Custom cursor (see Cursor.tsx). The wrapper sits exactly on the pointer; the shape is centred on
+ * it and morphs between a 10px dot and the "View" pill. Colour and shape ease with the reference's
+ * curve (0.32s, cubic-bezier(0.22, 0.7, 0.25, 1)); position is never eased. */
+
+.cursor {
+  /* Site palette: Silent Ocean on light surfaces, Butter on dark ones, Chocopie glass for the pill. */
+  --cursor-on-light: #0f3c65;  /* Silent Ocean */
+  --cursor-on-dark: #feefb8;   /* Butter */
+  /* RGB channels for the glows, which use the dot's own colour. */
+  --ocean-rgb: 15 60 101;
+  --butter-rgb: 254 239 184;
+  --choco-rgb: 67 47 46;
+  --cursor-pill: rgb(67 47 46 / 0.88);  /* Chocopie glass */
+  --cursor-mark: #c4dae8;      /* Blue */
+  --cursor-ease: cubic-bezier(0.22, 0.7, 0.25, 1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  will-change: transform;
+  transition: opacity 0.2s ease;
+}
+.cursor[data-hidden="true"] { opacity: 0; }
+
+.shape {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--cursor-on-light);
+  /* The haze: a hairline ring, a close glow and a wide soft spread, all in the dot's own colour
+   * (after the reference; subtle on light surfaces, glowing on dark ones). */
+  box-shadow:
+    0 0 0 1px rgb(var(--ocean-rgb) / 0.14),
+    0 0 6px 1px rgb(var(--ocean-rgb) / 0.3),
+    0 0 14px 4px rgb(var(--ocean-rgb) / 0.34);
+  translate: -50% -50%;
+  white-space: nowrap;
+  overflow: hidden;
+  transition:
+    width 0.32s var(--cursor-ease),
+    height 0.32s var(--cursor-ease),
+    border-radius 0.32s var(--cursor-ease),
+    background-color 0.32s var(--cursor-ease),
+    box-shadow 0.32s var(--cursor-ease),
+    scale 0.2s var(--cursor-ease);
+}
+
+/* Contrast flips with the surface, like the reference (dark dot on its red, red dot on its black). */
+.cursor[data-variant="dark"] .shape {
+  background: var(--cursor-on-dark);
+  box-shadow:
+    0 0 0 1px rgb(var(--butter-rgb) / 0.4),
+    0 0 6px 1px rgb(var(--butter-rgb) / 0.7),
+    0 0 16px 5px rgb(var(--butter-rgb) / 0.44);
+}
+/* Photos are mixed light and dark: the glowing Butter dot, edged with a hairline of Silent Ocean so it
+ * holds on bright images too. */
+.cursor[data-variant="media"] .shape {
+  background: var(--cursor-on-dark);
+  box-shadow:
+    0 0 0 1px rgb(var(--ocean-rgb) / 0.55),
+    0 0 6px 1px rgb(var(--butter-rgb) / 0.7),
+    0 0 16px 5px rgb(var(--butter-rgb) / 0.44);
+}
+.cursor[data-pressed="true"] .shape { scale: 0.7; }
+
+/* "View" pill: Chocopie glass, a small Blue mark, a Butter label. */
+.mark,
+.label { opacity: 0; transition: opacity 0.2s var(--cursor-ease); }
+.mark {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--cursor-mark);
+}
+.label {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: #feefb8;
+}
+.cursor[data-variant="view"] .shape {
+  width: 78px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--cursor-pill);
+  box-shadow:
+    0 8px 24px rgb(31 21 20 / 0.28),
+    0 0 14px 4px rgb(var(--choco-rgb) / 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.cursor[data-variant="view"] .mark,
+.cursor[data-variant="view"] .label { opacity: 1; transition-delay: 0.08s; }
+.cursor[data-variant="view"][data-pressed="true"] .shape { scale: 0.94; }
+
+/* The native cursor is replaced everywhere it shows… */
+:global(html.has-custom-cursor),
+:global(html.has-custom-cursor *) { cursor: none !important; }
+/* …except over the image viewer, a top-layer <dialog> the dot can't sit above. */
+:global(html.has-custom-cursor:has(dialog[open])),
+:global(html.has-custom-cursor:has(dialog[open]) *) { cursor: auto !important; }
+:global(html:has(dialog[open])) .cursor { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shape { transition-duration: 0.01s; }
+}

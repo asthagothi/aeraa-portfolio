@@ -1,0 +1,186 @@
+/*
+ * Design tokens — the single source of truth for visual values.
+ * Components reference these variables; they never hard-code colors, sizes or timings.
+ * Motion values used by GSAP live in src/design/motion.ts and mirror the durations here.
+ */
+
+:root {
+  /* ---------- Site palette ----------
+   * Blue #C4DAE8 · Butter #FEEFB8 · Chocopie #432F2E · Silent Ocean #0F3C65 · Vanilla Beige #FAF1CA
+   * · Pearl #EAE0C8 · Slate Gray #708090. Every colour on the site is one of these, a tint or shade
+   * of them, or (for text) a deeper Chocopie for contrast. Slate Gray is decorative only: it is
+   * under 4.5:1 against every light and dark colour here, so it never carries text.
+   */
+  --palette-blue: #c4dae8;
+  --palette-butter: #feefb8;
+  --palette-chocopie: #432f2e;
+  --palette-ocean: #0f3c65;
+  --palette-vanilla: #faf1ca;
+  --palette-pearl: #eae0c8;
+  --palette-slate: #708090;
+  /* Fine paper grain, layered over backgrounds (Chocopie-tinted noise, very low alpha). */
+  --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .26 0 0 0 0 .18 0 0 0 0 .18 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+  --palette-ink: #2e201f;           /* Chocopie, deepened for body text */
+
+  /* ---------- Color: canvas & surfaces ---------- */
+  /* Backdrop is sampled from the palette version of the portrait (wall = Blue) so it blends. */
+  --color-canvas: #c0d4e2;          /* wall, sampled from portrait edges */
+  --color-canvas-top: #c3d9e6;
+  --color-canvas-bottom: #f2e9be;   /* floor tone */
+
+  --color-surface-glass: rgb(248 243 233 / 0.88);      /* intro card: muted warm off-white glass */
+  --color-surface-glass-border: rgb(255 248 220 / 0.6);
+  --color-surface-glass-divider: rgb(46 32 31 / 0.1);
+  --color-surface-dark: #2e201f;                        /* skills tab, call widget */
+  --color-surface-charcoal: rgb(67 47 46 / 0.9);       /* skills list (Chocopie) */
+  --color-surface-charcoal-divider: rgb(254 239 184 / 0.12);
+  --color-surface-light: #fff8dc;                       /* browser bar */
+  --color-surface-paper: #feefb8;                       /* floating cards */
+
+  /* ---------- Color: text ---------- */
+  --color-text-hero: #432f2e;        /* Chocopie on the Blue wall */
+  --color-text-strong: #2e201f;
+  --color-text-body: #3a2928;
+  --color-text-muted: #6b5250;
+  --color-text-on-dark: #feefb8;
+  --color-text-on-dark-muted: rgb(254 239 184 / 0.75);
+
+  /* ---------- Color: accents ---------- */
+  --color-accent: #432f2e;           /* primary actions (the intro card's action); ≥4.5:1 on the glass card */
+  --color-accent-hover: #2e201f;
+  --color-accent-red: #c4dae8;       /* Blue: highlighted skill, decline (name kept) */
+  --color-accent-green: #feefb8;     /* Butter: accept (name kept) */
+  --color-focus-ring: #432f2e;
+
+  /* ---------- Typography: families ---------- */
+  /* Type system: one family, Sofia Sans. Extra Condensed (--font-condensed, --font-display) for headings and figures; the regular width (--font-ui) for text and labels. Vogue only for the logo "Aeraa". */
+  --font-display: "Sofia Sans Extra Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: "Sofia Sans Variable", "Sofia Sans", "Helvetica Neue", Arial, sans-serif;
+
+  /* ---------- Typography: weights ---------- */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ---------- Typography: fluid sizes ----------
+   * Measured from the 1397px-wide reference (headline ≈ 129px, eyebrow ≈ 50px).
+   * `cqi` resolves against the nearest size container (the hero stage), and
+   * against the viewport when there is none, so hero type scales with the composition.
+   */
+  --text-display: clamp(3rem, 9.25cqi, 10rem);             /* DESIGNER */
+  --text-eyebrow: clamp(1.25rem, 3.55cqi, 3.75rem);        /* MULTIMEDIA */
+  --text-card-heading: clamp(0.9375rem, 1.1cqi, 1.125rem);
+  --text-card-body: clamp(0.8125rem, 0.86cqi, 0.9375rem);  /* intro card paragraph */
+  --text-body: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --text-label: clamp(0.875rem, 1.12cqi, 1.125rem);        /* skill rows, tab */
+  --text-ui-sm: clamp(0.75rem, 0.86cqi, 0.875rem);         /* browser bar, meta */
+  --text-ui-xs: 0.6875rem;
+
+  --leading-display: 0.86;
+  --leading-tight: 1.2;
+  --leading-body: 1.5;
+
+  --tracking-eyebrow: 0.02em;
+  --tracking-display: -0.045em;
+  --tracking-body: -0.005em;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --content-max: 90rem;
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;     /* intro card, skills panel */
+  --radius-lg: 1.125rem;    /* skills tab */
+  --radius-xl: 1.75rem;     /* dock-like surfaces */
+  --radius-pill: 999px;     /* call widget, buttons */
+  --radius-pin: 1rem;       /* Page 2 pins */
+
+  /* ---------- Shadows (static elements only; moving elements use --shadow-motion) ---------- */
+  --shadow-soft: 0 10px 30px -12px rgb(31 21 20 / 0.26);
+  --shadow-card: 0 18px 50px -20px rgb(31 21 20 / 0.4), 0 2px 6px rgb(31 21 20 / 0.08);
+  --shadow-float: 0 30px 60px -25px rgb(31 21 20 / 0.5);
+  --shadow-motion: 0 16px 32px -16px rgb(31 21 20 / 0.4);
+  /* Faint Butter lift under the Chocopie display type on the Blue wall. */
+  --shadow-hero-text: 0 1px 0 rgb(254 239 184 / 0.22);
+
+  --blur-glass: 18px;
+
+  /* ---------- Motion ---------- */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 600ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---------- Layering ----------
+   * Hero stacking order, back to front: photograph, headline, then the
+   * background-removed cut-out so the subject overlaps the lettering.
+   */
+  --z-canvas: 0;
+  --z-portrait: 10;
+  --z-headline: 20;
+  --z-portrait-cutout: 30;
+  --z-card: 40;
+  --z-card-raised: 50;
+  --z-widget: 60;
+  --z-nav: 100;
+  --z-overlay: 1000;
+
+  /* ---------- Hit targets ---------- */
+  --tap-target: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
+
+/* ==========================================================================
+ * Studio theme — Pages 2 (work) and 3 (journal).
+ * PROVISIONAL palette: replace these values with the final palette. Only elements
+ * inside .theme-studio use them, so Page 1 is unaffected.
+ * ========================================================================== */
+:root {
+  --font-condensed: "Sofia Sans Extra Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  /* Supplied brand face (styles/brand-fonts.css): Vogue, for the name "Aeraa" only. */
+  --font-logo: "Vogue", "Bodoni 72", "Didot", "Playfair Display", Georgia, serif;
+}
+
+.theme-studio {
+  /* Token names are historical (from the first pastel-green palette); values are the site palette. */
+  --studio-cream: #faf1ca;       /* Vanilla Beige — main canvas */
+  --studio-ivory: #fdf8e4;       /* Vanilla Beige, lifted — raised paper */
+  --studio-sage: #c4dae8;        /* Blue */
+  --studio-botanical: #e1edf4;   /* Blue, pale tint */
+  --studio-olive: #0f3c65;       /* Silent Ocean — deep panels (Vanilla text 10:1) */
+  --studio-moss: #432f2e;        /* Chocopie — dark accents and panels (≥10:1 on Butter) */
+  --studio-blush: #feefb8;       /* Butter — warm accent panels */
+  --studio-ink: #2e201f;         /* Chocopie, deepened — text */
+  --studio-ink-muted: #6b5250;   /* secondary text (≥6:1 on Vanilla, ≥5.4:1 on Pearl) */
+  --studio-line: rgb(46 32 31 / 0.16);
+  --studio-pearl: #eae0c8;       /* Pearl — paper and secondary panels */
+  --studio-slate: #708090;       /* Slate Gray — decorative only (rings, haze, finishes) */
+
+  --studio-label-size: 0.75rem;
+  --studio-label-tracking: 0.14em;
+
+  background: var(--studio-cream);
+  color: var(--studio-ink);
+}

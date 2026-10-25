@@ -1,0 +1,127 @@
+.intro {
+  background: var(--color-canvas);
+  padding: var(--space-16) var(--gutter) var(--space-24);
+}
+
+.inner {
+  max-width: 64rem;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+  gap: var(--space-10);
+  align-items: start;
+}
+
+/* Glass card — sibling of the Page 1 intro card. */
+.card {
+  padding: var(--space-8) var(--space-8) 0;
+  background: var(--color-surface-glass);
+  border: 1px solid var(--color-surface-glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.heading {
+  margin-top: var(--space-3);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-text-strong);
+}
+
+.body {
+  margin-top: var(--space-4);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-body);
+}
+
+.action {
+  display: grid;
+  place-items: center;
+  min-height: var(--tap-target);
+  margin: var(--space-6) calc(-1 * var(--space-8)) 0;
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-surface-glass-divider);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+  transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+}
+
+.action:hover {
+  color: var(--color-accent-hover);
+  background-color: rgb(255 255 255 / 0.35);
+}
+
+.action:focus-visible {
+  outline-offset: -3px;
+}
+
+/* Dark panel — sibling of the Page 1 skills panel. */
+.themes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-16);
+}
+
+.tab {
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface-dark);
+  color: var(--color-text-on-dark);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  font-family: var(--font-ui);
+  font-weight: var(--weight-medium);
+  font-size: 1rem;
+}
+
+.list {
+  width: 100%;
+  background: var(--color-surface-charcoal);
+  color: var(--color-text-on-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding-inline: var(--space-4);
+  font-size: 1rem;
+}
+
+.row + .row {
+  border-top: 1px solid var(--color-surface-charcoal-divider);
+}
+
+.star {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 767px) {
+  .intro { padding-block: var(--space-10) var(--space-16); }
+  .inner { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .card { padding: var(--space-6) var(--space-5) 0; }
+  .action { margin-inline: calc(-1 * var(--space-5)); }
+  .themes { margin-top: 0; }
+}

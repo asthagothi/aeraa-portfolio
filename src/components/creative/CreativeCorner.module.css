@@ -1,0 +1,338 @@
+/* Home, third section — Creative Corner: a 3D orbit of artwork.
+ * Default rules are the no-JS fallback (a centred focal piece and a simple row of pieces).
+ * [data-mode="orbit"] is the 3D stage: one perspective space, one preserve-3d scene, so the focal
+ * piece and every card are layered by real depth. */
+
+.page {
+  --paper: #eae0c8;                  /* Pearl */
+  --ink: var(--studio-ink);
+  --muted: var(--studio-ink-muted);
+  --dark: #2e201f;                   /* deep Chocopie */
+  --on-dark: #feefb8;                /* Butter */
+  min-height: 100svh;
+  background:
+    var(--texture-grain),
+    /* Fades in from the phone section's Vanilla above. */
+    linear-gradient(to bottom, var(--studio-cream), transparent 22vh),
+    radial-gradient(60vw 55vh at 50% 52vh, rgb(253 248 228 / 0.95), transparent 72%),
+    var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+}
+
+/* ---------- Heading ---------- */
+.head {
+  display: grid;
+  gap: 1.75rem;
+  padding: calc(var(--nav-h, 64px) + 2.5rem) clamp(1.25rem, 4vw, 3.5rem) 1rem;
+}
+.story { display: grid; gap: 0.6rem; max-width: 52ch; }
+.storyTitle {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: clamp(1.63rem, 1.3rem + 1.04vw, 2.08rem);
+  line-height: 0.92;
+}
+.storyText { font-size: 1rem; line-height: 1.65; color: var(--ink); text-wrap: pretty; }
+@media (min-width: 900px) {
+  .head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; column-gap: 4vw; }
+  .story { justify-self: end; padding-bottom: 0.4rem; }
+}
+
+.title {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: clamp(3.25rem, 1.95rem + 4.68vw, 6.17rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.intro {
+  margin-top: 0.7rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- No-JS fallback: focal piece, then a centred row ---------- */
+.scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 1.25rem 3rem;
+}
+
+.focal { width: min(80vw, 420px); }
+
+/* The artwork alone: no mat, frame or border. The box is only a bounding area; each image is
+ * contained whole at its natural proportions (never cropped or stretched), and the shadow is a
+ * drop-shadow, so it follows the artwork's own edges rather than the box. */
+.focalMat {
+  position: relative;
+  /* Square, so tall and wide pieces each fill one dimension and carry similar weight. */
+  aspect-ratio: 1;
+}
+.focalMat img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 34px rgb(46 32 31 / 0.3)) drop-shadow(0 3px 6px rgb(46 32 31 / 0.14));
+}
+.focalIn { animation: artIn 0.7s var(--ease-out-expo) both; }
+.focalOut { animation: artOut 0.5s ease both; }
+@keyframes artIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes artOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: scale(1.02); }
+}
+
+.orbit {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: block;
+  position: relative;
+  height: calc(150px * var(--fit, 1));
+  aspect-ratio: var(--ratio, 0.75);
+  color: inherit;
+}
+
+/* The card is sized to the piece's own ratio, so the image fills it edge to edge. */
+.cardInner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-shadow:
+    0 24px 44px -24px rgb(46 32 31 / 0.55),
+    0 2px 6px rgb(46 32 31 / 0.12);
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s ease;
+}
+.cardInner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cardLabel {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  translate: -50% 4px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--dark);
+  color: var(--on-dark);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, translate 0.35s var(--ease-out-expo);
+}
+
+/* Hover / focus: the piece lifts out of the orbit a little and names itself. */
+.card:hover .cardInner,
+.card:focus-visible .cardInner {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow:
+    0 34px 54px -26px rgb(46 32 31 / 0.6),
+    0 2px 6px rgb(46 32 31 / 0.12);
+}
+.card:hover .cardLabel,
+.card:focus-visible .cardLabel { opacity: 1; translate: -50% 0; }
+.card:focus-visible { outline: none; }
+.card:focus-visible .cardInner { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* ---------- Caption + controls ---------- */
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+  padding: 0 1.25rem 3rem;
+}
+
+.captionText {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+.captionNo {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.captionTitle { display: grid; gap: 0.15rem; min-width: 0; }
+.captionLabel {
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 1.69rem;
+  line-height: 0.92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.captionKind {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.captionActions { display: flex; align-items: center; gap: 8px; }
+
+.navBtn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgb(46 32 31 / 0.25);
+  color: var(--ink);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.navBtn:hover:not(:disabled) { background: var(--dark); color: var(--on-dark); }
+.navBtn:disabled { opacity: 0.35; cursor: default; }
+
+.view {
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--dark);
+  color: var(--on-dark);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+}
+
+.navBtn:focus-visible,
+.view:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.hint { display: none; }
+
+/* ==========================================================================
+ * Orbit mode (JS): the 3D stage
+ * ======================================================================== */
+[data-mode="orbit"] .stage {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+/* One perspective, one 3D space. */
+[data-mode="orbit"] .space {
+  position: absolute;
+  inset: 0;
+  perspective: 1500px;
+  perspective-origin: 50% 42%;
+}
+
+[data-mode="orbit"] .scene {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 49%;
+  width: 0;
+  height: 0;
+  padding: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* The focal piece: large, set back (translateZ < 0), so front cards pass in front of it. */
+[data-mode="orbit"] .focal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: min(50vh, 560px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) translateZ(var(--focal-z, -120px));
+}
+[data-mode="orbit"] .focalMat { height: 100%; }
+
+[data-mode="orbit"] .orbit,
+[data-mode="orbit"] .slot {
+  transform-style: preserve-3d;
+}
+[data-mode="orbit"] .orbit {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+[data-mode="orbit"] .card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* Wide pieces get less height (--fit = ratio^-0.8) so every card carries similar weight. */
+  height: calc(clamp(96px, 15vh, 176px) * var(--fit, 1));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+[data-mode="orbit"] .caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(14px, 3vh, 28px);
+  z-index: 2;
+  padding-bottom: 0;
+}
+
+[data-mode="orbit"] .hint {
+  display: block;
+  position: absolute;
+  right: clamp(1.25rem, 4vw, 3.5rem);
+  top: calc(var(--nav-h, 64px) + 1rem);
+  z-index: 2;
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 699px) {
+  [data-mode="orbit"] .space { perspective: 900px; perspective-origin: 50% 46%; }
+  [data-mode="orbit"] .scene { top: 50%; }
+  [data-mode="orbit"] .focal { height: min(30vh, 280px); }
+  [data-mode="orbit"] .card { height: calc(clamp(52px, 8.5vh, 84px) * var(--fit, 1)); }
+  [data-mode="orbit"] .hint { display: none; }
+  .captionLabel { font-size: 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focalIn,
+  .focalOut { animation: none; }
+  .cardInner,
+  .cardLabel { transition: none; }
+}

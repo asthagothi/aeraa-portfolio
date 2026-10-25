@@ -1,0 +1,78 @@
+{
+  "01-lips-study": {
+    "width": 736,
+    "height": 1308
+  },
+  "02-ear-study": {
+    "width": 736,
+    "height": 1308
+  },
+  "03-eye-study": {
+    "width": 736,
+    "height": 1308
+  },
+  "04-portrait-bangs": {
+    "width": 736,
+    "height": 1308
+  },
+  "05-framed-portrait": {
+    "width": 736,
+    "height": 1308
+  },
+  "06-dark-portrait": {
+    "width": 736,
+    "height": 552
+  },
+  "07-butterfly": {
+    "width": 736,
+    "height": 1308
+  },
+  "08-sketchbook-page": {
+    "width": 736,
+    "height": 1104
+  },
+  "09-sketchbook-portrait": {
+    "width": 736,
+    "height": 981
+  },
+  "10-face-closeup": {
+    "width": 736,
+    "height": 1104
+  },
+  "11-framed-face": {
+    "width": 736,
+    "height": 414
+  },
+  "12-starry-night-study": {
+    "width": 864,
+    "height": 1536
+  },
+  "13-seascape-sunset": {
+    "width": 864,
+    "height": 1536
+  },
+  "14-moonlit-beach": {
+    "width": 864,
+    "height": 1536
+  },
+  "15-autumn-trees": {
+    "width": 864,
+    "height": 1536
+  },
+  "16-holding-autumn-trees": {
+    "width": 1024,
+    "height": 1536
+  },
+  "17-painting-lineup": {
+    "width": 730,
+    "height": 413
+  },
+  "18-studio-flatlay": {
+    "width": 1536,
+    "height": 1024
+  },
+  "19-type-poster": {
+    "width": 1600,
+    "height": 2000
+  }
+}

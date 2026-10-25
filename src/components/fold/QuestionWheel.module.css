@@ -1,0 +1,79 @@
+/* Question wheel (see QuestionWheel.tsx). Scene only: in the static flow the page shows no backdrops.
+ * Each drum is a 3D cylinder: slots sit on its surface (rotateX(-a) translateZ(r)) and the inner
+ * element turns. Only the slot facing the viewer takes pointer events. */
+.wheel { display: none; }
+
+:global([data-mode="scene"]) .wheel {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.drum {
+  --r: clamp(130px, 17vh, 190px);
+  position: absolute;
+  top: 50%;
+  /* Exactly the space beside the folded device (half its open width shows), less a margin, so a
+   * question never runs under the phone. --device-w is set on the page by FoldHome. */
+  width: min(400px, calc((100vw - var(--device-w, 60vw) / 2) / 2 - clamp(2rem, 5vw, 5rem)));
+  height: 0;
+  perspective: 1100px;
+}
+.drum[data-side="left"] { left: clamp(1rem, 3vw, 3rem); }
+.drum[data-side="right"] { right: clamp(1rem, 3vw, 3rem); }
+
+.inner {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  transform: translateY(-50%) rotateX(calc(-1 * var(--a))) translateZ(var(--r));
+  backface-visibility: hidden;
+}
+.drum[data-side="left"] .slot { text-align: right; }
+.drum[data-side="right"] .slot { text-align: left; }
+
+.question {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  padding: 0.35em 0.1em;
+  font-family: var(--font-condensed);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: clamp(1.43rem, 2.21vw, 2.27rem);
+  line-height: 0.92;
+  color: rgb(46 32 31 / 0.55);
+  text-decoration: none;
+  text-wrap: balance;
+  pointer-events: none;
+  transition: color 0.4s cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+.arrow {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: 0.6em;
+  opacity: 0;
+  transform: translate(-4px, 2px);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+
+/* The slot facing the viewer: lit in Silent Ocean, clickable, with its arrow. */
+.slot[data-front="true"] .question {
+  color: var(--palette-ocean, #0f3c65);
+  pointer-events: auto;
+}
+.slot[data-front="true"] .arrow { opacity: 1; transform: none; }
+.slot[data-front="true"] .question:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.question:focus-visible { outline: 2px solid var(--palette-ocean, #0f3c65); outline-offset: 4px; border-radius: 4px; }

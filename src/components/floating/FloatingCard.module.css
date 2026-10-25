@@ -1,0 +1,88 @@
+/* Retro-window card: light chrome, title bar, media well. No blur/filters — it moves a lot. */
+
+.card {
+  /* Scenes can size cards by setting --floating-card-width on an ancestor. */
+  width: var(--floating-card-width, clamp(200px, 19vw, 320px));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-paper);
+  border: 1px solid rgb(0 0 0 / 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-motion);
+  overflow: hidden;
+  color: var(--color-text-strong);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid rgb(0 0 0 / 0.07);
+}
+
+.title {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-ui-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controls {
+  display: flex;
+  gap: 5px;
+}
+
+.controls i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: rgb(0 0 0 / 0.14);
+}
+
+.media {
+  position: relative;
+  margin: var(--space-2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-canvas);
+  aspect-ratio: 4 / 5;
+}
+
+.card[data-aspect="landscape"] .media { aspect-ratio: 4 / 3; }
+.card[data-aspect="square"] .media { aspect-ratio: 1; }
+
+.media img,
+.placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Abstract pixel-mosaic placeholder, echoing the colour blocks on the retro monitors. */
+.placeholder {
+  --c1: #ff5a4e;
+  --c2: #ff8fa3;
+  --c3: #7b6cff;
+  --c4: #38c6a8;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.18) 0 1px, transparent 1px 12.5%),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.18) 0 1px, transparent 1px 12.5%),
+    linear-gradient(135deg, var(--c1) 0 30%, var(--c2) 30% 48%, var(--c3) 48% 70%, var(--c4) 70%);
+}
+
+.placeholder[data-palette="cool"] { --c1: #3d5afe; --c2: #7c8cff; --c3: #5ad1e6; --c4: #e9f0ff; }
+.placeholder[data-palette="mono"] { --c1: #2b2b2e; --c2: #5c5c60; --c3: #a3a3a7; --c4: #e4e4e6; }
+.placeholder[data-palette="signal"] { --c1: #ff2d3b; --c2: #ffd23f; --c3: #28c840; --c4: #2f6bff; }
+
+.caption {
+  padding: 0 var(--space-3) var(--space-3);
+  font-family: var(--font-ui);
+  font-size: var(--text-ui-sm);
+  color: var(--color-text-muted);
+}

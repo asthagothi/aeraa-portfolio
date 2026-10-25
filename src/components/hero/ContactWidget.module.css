@@ -1,0 +1,74 @@
+.widget {
+  display: flex;
+  align-items: center;
+  gap: max(var(--space-3), 1cqi);
+  min-height: max(64px, 6.15cqi);
+  padding: max(var(--space-2), 0.7cqi) max(var(--space-3), 1.05cqi);
+  background: var(--color-surface-dark);
+  color: var(--color-text-on-dark);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-float);
+}
+
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: max(40px, 3.1cqi);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-surface-light);
+  padding: max(2px, 0.2cqi);
+  overflow: hidden;
+}
+
+.avatar > svg,
+.avatar > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.details {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.name {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-card-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.line {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-light);
+  font-size: var(--text-ui-sm);
+  color: var(--color-text-on-dark-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Actions: copy the address, or write an email. Real buttons, with hover and focus states. */
+.call {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: max(36px, 2.6cqi);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--palette-ink);
+  font-size: max(16px, 1.25cqi);
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.call[data-tone="copy"] { background: var(--color-accent-red); }
+.call[data-tone="mail"] { background: var(--color-accent-green); }
+.call:hover { transform: translateY(-1px); }
+.call:focus-visible { outline: 2px solid var(--color-accent-green); outline-offset: 3px; }

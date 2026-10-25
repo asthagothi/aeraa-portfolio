@@ -1,0 +1,82 @@
+.scene {
+  position: relative;
+  background: linear-gradient(to bottom, var(--color-canvas-bottom), var(--color-canvas) 60%);
+}
+
+/* ---------- Static layout (default: reduced motion, small screens, no JS) ---------- */
+
+.stage {
+  position: relative;
+  padding: var(--space-24) var(--gutter);
+}
+
+.backdrop {
+  margin-bottom: var(--space-10);
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: clamp(2.5rem, 1rem + 6vw, 8rem);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--color-text-hero);
+  text-shadow: var(--shadow-hero-text);
+}
+
+.cards {
+  --floating-card-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  align-items: start;
+  gap: var(--space-6);
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+  .stage {
+    padding-block: var(--space-16);
+  }
+
+  /* Two compact columns on phones keeps the static gallery short. */
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+    gap: var(--space-4);
+  }
+}
+
+/* ---------- Animated layout (opted into from JS) ---------- */
+
+.scene[data-animated] .stage {
+  height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  perspective: 1400px;
+}
+
+.scene[data-animated] .backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-size: clamp(4rem, 2rem + 9vw, 12rem);
+  pointer-events: none;
+}
+
+.scene[data-animated] .cards {
+  --floating-card-width: clamp(200px, 19vw, 320px);
+  position: absolute;
+  inset: 0;
+  display: block;
+  max-width: none;
+}
+
+.scene[data-animated] .slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* Centred on this point by GSAP (xPercent/yPercent), which owns `transform`. */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
