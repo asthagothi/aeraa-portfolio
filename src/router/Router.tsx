@@ -2,14 +2,23 @@
 // in-page hash links, and an optional page-transition hook. No dependency needed for four routes.
 //
 // Hosting note: the server must serve index.html for unknown paths (SPA fallback). Vite's dev and
-// preview servers do this already; for static hosting add a rewrite of /* → /index.html.
+// preview servers do this already; for static hosting add a rewrite of /* → /index.html (GitHub
+// Pages serves the 404.html copy the deploy workflow makes).
+//
+// Route paths are written without the site's base (e.g. '/work'). When the site is served from a
+// sub-folder (BASE_PATH at build time, e.g. GitHub Pages' /aeraa-portfolio/), the base is removed
+// when reading the URL and added back when writing it.
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type AnchorHTMLAttributes, type MouseEvent, type ReactNode, type Ref } from 'react'
 import { RouterContext, useRouter, type Location, type TransitionPlayer } from './routerContext.ts'
 import { ScrollTrigger } from '../lib/gsap.ts'
 import { scrollToElement, scrollToY } from '../lib/smoothScroll.ts'
 import { scrollToHashTarget } from './hashTargets.ts'
 
-const readLocation = (): Location => ({ path: normalise(window.location.pathname), hash: window.location.hash })
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '')
+const withBase = (to: string) => (base && to.startsWith('/') ? base + to : to)
+const stripBase = (path: string) => (base && (path === base || path.startsWith(base + '/')) ? path.slice(base.length) || '/' : path)
+
+const readLocation = (): Location => ({ path: normalise(stripBase(window.location.pathname)), hash: window.location.hash })
 const normalise = (path: string) => (path.length > 1 ? path.replace(/\/+$/, '') : path)
 
 function scrollToHash(hash: string, smooth = true) {
@@ -91,12 +100,12 @@ export function RouterProvider({ children }: { children: ReactNode }) {
 
   const navigate = useCallback((to: string, options?: { replace?: boolean }) => {
     const write = options?.replace ? history.replaceState.bind(history) : history.pushState.bind(history)
-    const url = new URL(to, window.location.href)
+    const url = new URL(withBase(to), window.location.href)
     if (url.origin !== window.location.origin) {
       window.location.assign(url.href)
       return
     }
-    const next: Location = { path: normalise(url.pathname), hash: url.hash }
+    const next: Location = { path: normalise(stripBase(url.pathname)), hash: url.hash }
     const current = readLocation()
 
     // Same page: just move to the hash (or the top).
@@ -146,7 +155,7 @@ export function Link({ to, match = 'exact', onClick, children, ...rest }: LinkPr
   }
 
   return (
-    <a href={to} onClick={handleClick} aria-current={active && !to.includes('#') ? 'page' : undefined} {...rest}>
+    <a href={withBase(to)} onClick={handleClick} aria-current={active && !to.includes('#') ? 'page' : undefined} {...rest}>
       {children}
     </a>
   )
