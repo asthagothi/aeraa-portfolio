@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Original, unedited source files (some show client contact details). Kept locally only;
+# scripts/optimize-images.mjs reads them to produce the published images in src/assets.
+source-assets
